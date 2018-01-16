@@ -8,7 +8,7 @@ tags:
     - Nela
 ---
 
-#Past and future #
+# Past and future #
 
 ## java ##
 ### 设计模式###
@@ -20,15 +20,14 @@ tags:
 - 建造者
 - 享元
 - 克隆
+     
 
-      
-	  行为模式
+	 行为模式
 
 
 ###  数据结构 ###
 
-
-##android framework## 
+## android framework ## 
 
 now:
 
@@ -50,6 +49,7 @@ future:
 			3.AMS
 			4.PMS
 			5.应用程序启动过程
+
 			8月：bindler ipc+4大组件启动模式+消息处理机制looper
 
 
