@@ -8,23 +8,26 @@ tags:
     - Android-FrameWork
 ---
 
-##android 源码编译方式##
+## android 源码编译方式 ##
 
+### 编译环境和配置 ###
 
-###编译环境和配置###
 source build/envset.sh
 //加载　vendorsetup.sh 脚本
 //加载　lunch 的命令（在本次回话窗口有效）
 lunch  
 // 选择版型　（生成的镜像要运行在什么样的设备上）
 //选择好后会存在　answer 中
-###整体编译###
+
+
+### 整体编译 ###
+
 make　　－j8  
 //整体编译命令执行　　－j8表示线程数（与编译的线程并不是越多越好,通常是根据你机器cup的核心来确定:core*2,即当前cpu的核心的2倍.比如,我现在的笔记本是双核四线程的,因此根据公式,最快速的编译可以make -j8.）
 
 
+### 模块编译指令 ###
 
-###模块编译指令###
 - croot: Changes directory to the top of the tree.
 - m: Makes from the top of the tree.
 - mm: Builds all of the modules in the current directory.
@@ -35,6 +38,7 @@ make　　－j8
 - jgrep: Greps on all local Java files.
 - resgrep: Greps on all local res/*.xml files.
 - godir: Go to the directory containing a file.
+- 
 
 [参考文章](https://www.jianshu.com/p/367f0886e62b)
 
@@ -57,7 +61,7 @@ need clone?-> copyfile ->sed　config-> makeNelaAction-> SOAP原生编译方式
 
 3.详细分析
 
-##copy##
+## copy流程 ##
 
 [-->file_name: mk]
 
