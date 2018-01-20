@@ -53,7 +53,7 @@ make snod
 －　copy  许多驱动层文件已经配置好直接copy 将原生代码隔离（原型模式）
 
 2. 脚本构建的基本思路
-need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方式
+need clone?-> copyfile ->sed　config-> makeNelaAction-> SOAP原生编译方式
 
 3.详细分析
 
@@ -64,7 +64,7 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
 ```
     #!/usr/bin/perl
 
-    #[sagereal][sagereal_COMPILE_ENV]
+    #[Nela][Nela_COMPILE_ENV]
     $user_mode = "no";
     $clone = "no";
     $action = "new";
@@ -77,15 +77,15 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
     //判断要执行的脚本文件是否存在　　
     //！－e "文件名" 
 
-    if (!-e "../sagereal/script/clone.sh")
+    if (!-e "../Nela/script/clone.sh")
     {
-      print "../sagereal/script/clone.sh not exst, pls check!\n";
+      print "../Nela/script/clone.sh not exst, pls check!\n";
       exit 1;
     }
 
-    if (!-e "../sagereal/mk/$new_project/ProjectConfig.mk")
+    if (!-e "../Nela/mk/$new_project/ProjectConfig.mk")
     {
-      print "../sagereal/mk/$new_project/ProjectConfig.mk not exst, pls check!\n";
+      print "../Nela/mk/$new_project/ProjectConfig.mk not exst, pls check!\n";
       exit 1;
     }
 
@@ -101,7 +101,7 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
 
     /*      当文件打开失败时结束程序 die ("cannot open input file file1\n");*/
 
-    $prj = "../sagereal/mk/$new_project/ProjectConfig.mk";
+    $prj = "../Nela/mk/$new_project/ProjectConfig.mk";
     open (FILE_HANDLE, "<$prj") or die "cannot open $prj\n";
     while (<FILE_HANDLE>)
     {
@@ -117,31 +117,31 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
     ＃如上代码通过只读的方式读取所用宏　并将值存在ENV中下面将其赋值
 
 
-    my $sagereal_target_project = $ENV{sagereal_target_project};
+    my $Nela_target_project = $ENV{Nela_target_project};
     my $pcb_config = $ENV{pcb_config};
-    my $sagereal_memory_flash  = $ENV{sagereal_memory_flash};
-    my $sagereal_audio_effect_para  = $ENV{sagereal_audio_effect_para};
-    my $sagereal_camera_effect_para  = $ENV{sagereal_camera_effect_para};
-    my $sagereal_battery_capacity  = $ENV{sagereal_battery_capacity};
-    my $sagereal_product_folder    = $ENV{sagereal_product_folder};
-    #add by Sagereal zhuangshengbin
-    my $sagereal_customer  = $ENV{sagereal_customer};
+    my $Nela_memory_flash  = $ENV{Nela_memory_flash};
+    my $Nela_audio_effect_para  = $ENV{Nela_audio_effect_para};
+    my $Nela_camera_effect_para  = $ENV{Nela_camera_effect_para};
+    my $Nela_battery_capacity  = $ENV{Nela_battery_capacity};
+    my $Nela_product_folder    = $ENV{Nela_product_folder};
+    #add by Nela zhuangshengbin
+    my $Nela_customer  = $ENV{Nela_customer};
     my $logo_size  = $ENV{logo_size};
     my $wallpaper_size  = $ENV{wallpaper_size};
-    my $SAGEREAL_COCLOCK_SUPPORT= $ENV{SAGEREAL_COCLOCK_SUPPORT};
+    my $Nela_COCLOCK_SUPPORT= $ENV{Nela_COCLOCK_SUPPORT};
 
 
     print "act: $act\n";
     print "user_mode: $user_mode\n";
     print "clone: $clone\n";
-    print "sagereal_target_project: $sagereal_target_project\n";
+    print "Nela_target_project: $Nela_target_project\n";
     print "pcb_config: $pcb_config\n";
-    print "sagereal_memory_flash: $sagereal_memory_flash\n";
-    print "sagereal_audio_effect_para: $sagereal_audio_effect_para\n";
-    print "sagereal_camera_effect_para: $sagereal_camera_effect_para\n";
-    print "sagereal_battery_capacity: $sagereal_battery_capacity\n";
-    print "sagereal_product_folder: $sagereal_product_folder\n";
-    print "sagereal_customer: $sagereal_customer\n";
+    print "Nela_memory_flash: $Nela_memory_flash\n";
+    print "Nela_audio_effect_para: $Nela_audio_effect_para\n";
+    print "Nela_camera_effect_para: $Nela_camera_effect_para\n";
+    print "Nela_battery_capacity: $Nela_battery_capacity\n";
+    print "Nela_product_folder: $Nela_product_folder\n";
+    print "Nela_customer: $Nela_customer\n";
     print "logo_size: $logo_size\n";
     print "wallpaper_size: $wallpaper_size\n";
 
@@ -151,7 +151,7 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
     //并并将宏的键和key　存储在环境变量中等待替换
 
 
-    $file = "../sagereal/mk/$new_project/${sagereal_target_project}_defconfig";
+    $file = "../Nela/mk/$new_project/${Nela_target_project}_defconfig";
     open (FILE_MODEL, "<$file") or die "cannot open $file\n";
     while (<FILE_MODEL>)
     {
@@ -173,46 +173,46 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
 
     if ($clone eq "yes")
     {
-      print "-------------Copy sagereal files!----------------\n";
+      print "-------------Copy Nela files!----------------\n";
         
       //如果需要clone 则执行clone脚本  
-      $result = system("bash ../sagereal/script/clone.sh 0 $new_project $pcb_config");
+      $result = system("bash ../Nela/script/clone.sh 0 $new_project $pcb_config");
       if ($result != 0)
       {
-        print "-------------Copy sagereal files error----------------\n";
+        print "-------------Copy Nela files error----------------\n";
         exit 1;
       }
-      print "-------------Copy sagereal files end----------------\n";
+      print "-------------Copy Nela files end----------------\n";
     }
 
     if ($act eq "clone")
     {
       print "-----------------------------------------------------\n";
-      print "------- sagereal Build Infomation END -------------------\n";
+      print "------- Nela Build Infomation END -------------------\n";
       print "-----------------------------------------------------\n";
     }
     elsif ($act eq "copybin")
     {
       print "-----------------------------------------------------\n";
-      print "------- sagereal Build Infomation END -------------------\n";
+      print "------- Nela Build Infomation END -------------------\n";
       print "-----------------------------------------------------\n";
 
-      $result = system("bash ../sagereal/script/build_log.sh $new_project $sagereal_target_project $user_mode");
-      $result = system("bash ../sagereal/script/copy_bin.sh $new_project $sagereal_target_project");
+      $result = system("bash ../Nela/script/build_log.sh $new_project $Nela_target_project $user_mode");
+      $result = system("bash ../Nela/script/copy_bin.sh $new_project $Nela_target_project");
     }
     elsif ($act eq "copybin_sign")
     {
       print "-----------------------------------------------------\n";
-      print "------- sagereal Build Infomation END -------------------\n";
+      print "------- Nela Build Infomation END -------------------\n";
       print "-----------------------------------------------------\n";
 
-      $result = system("bash ../sagereal/script/build_log.sh $new_project $sagereal_target_project $user_mode");
-      $result = system("bash ../sagereal/script/copy_bin_sign.sh $new_project $sagereal_target_project");
+      $result = system("bash ../Nela/script/build_log.sh $new_project $Nela_target_project $user_mode");
+      $result = system("bash ../Nela/script/copy_bin_sign.sh $new_project $Nela_target_project");
     }
     else
     {
     //以上时确定是否clone  /
-    //以下执行的是编译脚本　　主要内容在makesagerealAction.sh
+    //以下执行的是编译脚本　　主要内容在makeNelaAction.sh
       if ($user_mode eq "yes")
       {  
         if($act eq "mm")
@@ -227,10 +227,10 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
         print "************** build user software ****************\n";
         print "***************************************************\n";
         print "-----------------------------------------------------\n";
-        print "------- sagereal Build Infomation END -------------------\n";
+        print "------- Nela Build Infomation END -------------------\n";
         print "-----------------------------------------------------\n";
         # setBuildEnvVars("./mbldenv.sh");
-        $result = system("bash ../sagereal/script/makesagerealAction.sh $user_mode $act $ARGV[3]");
+        $result = system("bash ../Nela/script/makeNelaAction.sh $user_mode $act $ARGV[3]");
       }
       else
       {
@@ -246,10 +246,10 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
         print "************** build eng software ****************\n";
         print "***************************************************\n";
         print "-----------------------------------------------------\n";
-        print "------- sagereal Build Infomation END -------------------\n";
+        print "------- Nela Build Infomation END -------------------\n";
         print "-----------------------------------------------------\n";
         # setBuildEnvVars("./mbldenv.sh");
-        $result = system("bash ../sagereal/script/makesagerealAction.sh $user_mode $act $ARGV[2]");
+        $result = system("bash ../Nela/script/makeNelaAction.sh $user_mode $act $ARGV[2]");
       }
 
     //脚本执行完的收尾工作，打印成功或失败异常。
@@ -271,13 +271,13 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
             || ($act eq "bootimage")
             || ($act eq "otapackage"))
         {
-          $result = system("bash ../sagereal/script/build_log.sh $new_project $sagereal_target_project $user_mode");
-          $result = system("bash ../sagereal/script/copy_bin.sh $new_project $sagereal_target_project");
+          $result = system("bash ../Nela/script/build_log.sh $new_project $Nela_target_project $user_mode");
+          $result = system("bash ../Nela/script/copy_bin.sh $new_project $Nela_target_project");
         }
         elsif(($act eq "sign-image") || ($act eq "ota-sign"))
         {
-          $result = system("bash ../sagereal/script/build_log.sh $new_project $sagereal_target_project $user_mode");
-          $result = system("bash ../sagereal/script/copy_bin_sign.sh $new_project $sagereal_target_project");
+          $result = system("bash ../Nela/script/build_log.sh $new_project $Nela_target_project $user_mode");
+          $result = system("bash ../Nela/script/copy_bin_sign.sh $new_project $Nela_target_project");
         }
       }
       else
@@ -317,7 +317,7 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
       return (sprintf "%4.4d/%2.2d/%2.2d %2.2d:%2.2d:%2.2d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
     }
 
-    #[sagereal][sagereal_COMPILE_ENV]
+    #[Nela][Nela_COMPILE_ENV]
 ```
 
 
@@ -344,13 +344,13 @@ need clone?-> copyfile ->sed　config-> makesagerealAction-> SOAP原生编译方
             ＃依次执行clone
             if [ $1 == "0" ]; then
             //拷贝驱动　pcb
-              bash ../sagereal/script/clone_drv.sh $2 $3
+              bash ../Nela/script/clone_drv.sh $2 $3
             fi
 
             //拷贝客制化
-            bash ../sagereal/script/clone_integration.sh $2
+            bash ../Nela/script/clone_integration.sh $2
             //copy mmi
-            bash ../sagereal/script/clone_mmi.sh $2
+            bash ../Nela/script/clone_mmi.sh $2
 ```
 
 
