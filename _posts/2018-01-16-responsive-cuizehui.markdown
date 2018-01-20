@@ -21,8 +21,8 @@ tags:
 - 享元
 - 克隆
      
+        行为模式
 
-	 行为模式
 
 
 ###  数据结构 ###
@@ -34,13 +34,14 @@ now:
 1.内容 
      
 - 超级省电
+- notification  从产生开始到销毁结束
+- 宏控 和脚本的执行流程  如何自定义宏控
 
 future:
         
  - phonewindowmanager  按键 事件 
  - prefrence  如何保存 并绘制 永久带数据库的视图
- - notification  从产生开始到销毁结束
- - 宏控 和脚本的执行流程  如何自定义宏控
+
  -  package-app-systemUI
  - activity 启动过程
 
