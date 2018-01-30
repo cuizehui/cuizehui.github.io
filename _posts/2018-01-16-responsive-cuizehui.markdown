@@ -64,8 +64,8 @@ tags:
     2. 阐述例子： 例如考试信息省份等  
 
 - 组合模式（Composite Pattern）
-  
     1. 用于树形结构 现已经不常用
+    2. 阐述例子： viewGroup和view UI构建中经常用到
 
 - 桥接模式（Bridge Pattern）
 - 过滤器模式（Filter、Criteria Pattern）
@@ -112,11 +112,24 @@ tags:
     1. 已经被java中的迭代器代替了
 
 - 策略模式（Strategy Pattern）
+ 
+    1. 和代理模式相似 和访问者模式也相似 ，是执行同一种方法，通过产生不同的策略执行不同的方法
+    2. 阐述例子： Rxjava
+
+
+- 中介者模式（Mediator Pattern）
+    
+    1. MVC中的C
+    2. 阐述例子：MVC模式 listview baseAdapter
+
+- 解释器模式（Interpreter Pattern）
+
+    1. 解释一种特定的语法。hashMap 这种方式 采用递归，压栈，设置终止元素和非终止元素。代码臃肿维护难，通常可以采用脚本的方式进行优化，不深究
+    2. 阐述例子：计算器 四则运算
+
+
 - 模板模式（Template Pattern）
 - 空对象模式（Null Object Pattern）
-- 解释器模式（Interpreter Pattern）
-- 中介者模式（Mediator Pattern）
-
 
 
 #### J2EE 模式 ####
