@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Android 系统和应用层开发  | Nela，Android & Mobile  | 这里是 @Nela 的个人博客，与你一起发现更大的世界。">
+    <meta name="keywords"  content="Nela, Android   泥蜡的博客, 个人网站, 互联网, Web, JavaScript, 安卓, 设计">
+    <meta name="theme-color" content="#000000">
+    
+    <title>StatusBar添加Notifaction流程分析   - 泥蜡的博客 | Nela Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon 
+    <link rel="shortcut icon" href="/img/favicon.ico"> 
+     -->
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/01/05/responsive-android/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Nela Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-rwd.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-rwd.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Android-SystemUI" title="Android-SystemUI">Android-SystemUI</a>
+                        
+                    </div>
+                    <h1>StatusBar添加Notifaction流程分析  </h1>
+                    
+                    
+                    <h2 class="subheading"></h2>
+                    
+                    <span class="meta">Posted by Nela on January 5, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<h2 id="statusbar--notifaction">StatusBar  Notifaction</h2>
+
+<h3 id="statusbar通过notifaction初始化通知条">StatusBar通过Notifaction初始化通知条</h3>
+
+<p>PhoneStatusBar -&gt;BaseStatusBar</p>
+
+<ol>
+  <li>
+    <p>boot 引导文件启动</p>
+  </li>
+  <li>
+    <p>SystemUIserVice</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    private final Class&lt;?&gt;[] SERVICES = new Class[] {
+            com.android.systemui.tuner.TunerService.class, //定制状态栏服务
+            com.android.systemui.keyguard.KeyguardViewMediator.class,//锁屏模块
+            com.android.systemui.recents.Recents.class,//最近应用
+            com.android.systemui.volume.VolumeUI.class,//全局音量控制
+            com.android.systemui.statusbar.SystemBars.class,//系统状态栏
+            com.android.systemui.usb.StorageNotification.class,//Storage存储通知
+            com.android.systemui.power.PowerUI.class,//电量管理相关
+            com.android.systemui.media.RingtonePlayer.class,//铃声播放
+            com.android.systemui.keyboard.KeyboardUI.class,//键盘相关
+    };
+
+</code></pre></div>    </div>
+    <p>这里的service只是继承了SystemUI类的普通对象而已。</p>
+
+    <p>执行SystemBars.start()后，通过反射机制,最终得到BaseStatusBar对象。
+这里需要说明的是BaseStatusBar是PhoneStatusBar的父类。</p>
+  </li>
+  <li>
+    <p>SystemUI -&gt;start()</p>
+  </li>
+  <li>
+    <p>BaseStatusBar start():</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         public void start() {
+
+             //注册服务
+
+             mWindowManager = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
+             mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
+             mDisplay = mWindowManager.getDefaultDisplay();
+             mDevicePolicyManager = (DevicePolicyManager)mContext.getSystemService(
+                     Context.DEVICE_POLICY_SERVICE);
+
+             mNotificationData = new NotificationData(this);
+
+             mAccessibilityManager = (AccessibilityManager)
+                     mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
+
+             mDreamManager = IDreamManager.Stub.asInterface(
+                     ServiceManager.checkService(DreamService.DREAM_SERVICE));
+             mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+
+             mContext.getContentResolver().registerContentObserver(
+                     Settings.Global.getUriFor(Settings.Global.DEVICE_PROVISIONED), true,
+                     mSettingsObserver);
+             mContext.getContentResolver().registerContentObserver(
+                     Settings.Global.getUriFor(Settings.Global.ZEN_MODE), false,
+                     mSettingsObserver);
+
+                     //设置锁屏通知 观察者  在 子类变成 mHeadsUpObserver
+             mContext.getContentResolver().registerContentObserver(
+                     Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS), false,
+                     mSettingsObserver,
+                     UserHandle.USER_ALL);
+
+             if (ENABLE_LOCK_SCREEN_ALLOW_REMOTE_INPUT) {
+                 mContext.getContentResolver().registerContentObserver(
+                         Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_REMOTE_INPUT),
+                         false,
+                         mSettingsObserver,
+                         UserHandle.USER_ALL);
+             }
+              //锁屏通知监听者 当url 变化时 调用change 方法   于初始化有关
+             mContext.getContentResolver().registerContentObserver(
+                     Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS),
+                     true,
+                     mLockscreenSettingsObserver,
+                     UserHandle.USER_ALL);
+
+             mBarService = IStatusBarService.Stub.asInterface(
+                     ServiceManager.getService(Context.STATUS_BAR_SERVICE));
+
+             mRecents = getComponent(Recents.class);
+
+             final Configuration currentConfig = mContext.getResources().getConfiguration();
+             mLocale = currentConfig.locale;
+             mLayoutDirection = TextUtils.getLayoutDirectionFromLocale(mLocale);
+             mFontScale = currentConfig.fontScale;
+             mDensity = currentConfig.densityDpi;
+
+             mUserManager = (UserManager) mContext.getSystemService(Context.USER_SERVICE);
+             mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+             mLockPatternUtils = new LockPatternUtils(mContext);
+
+             // Connect in to the status bar manager service   连接到状态栏管理器服务
+             mCommandQueue = new CommandQueue(this);
+
+             int[] switches = new int[9];
+             ArrayList&lt;IBinder&gt; binders = new ArrayList&lt;IBinder&gt;();
+             ArrayList&lt;String&gt; iconSlots = new ArrayList&lt;&gt;();
+             ArrayList&lt;StatusBarIcon&gt; icons = new ArrayList&lt;&gt;();
+             Rect fullscreenStackBounds = new Rect();
+             Rect dockedStackBounds = new Rect();
+             try {
+                 mBarService.registerStatusBar(mCommandQueue, iconSlots, icons, switches, binders,
+                         fullscreenStackBounds, dockedStackBounds);
+             } catch (RemoteException ex) {
+                 // If the system process isn't there we're doomed anyway.
+             }
+             //创建视图
+             createAndAddWindows();
+             //创建视图
+
+             mSettingsObserver.onChange(false); // set up
+             disable(switches[0], switches[6], false /* animate */);
+             setSystemUiVisibility(switches[1], switches[7], switches[8], 0xffffffff,
+                     fullscreenStackBounds, dockedStackBounds);
+             topAppWindowChanged(switches[2] != 0);
+             // StatusBarManagerService has a back up of IME token and it's restored here.
+             setImeWindowStatus(binders.get(0), switches[3], switches[4], switches[5] != 0);
+
+             // Set up the initial icon state
+             int N = iconSlots.size();
+             int viewIndex = 0;
+             for (int i=0; i &lt; N; i++) {
+                 setIcon(iconSlots.get(i), icons.get(i));
+             }
+
+             // Set up the initial notification state.  设置初始通知状态
+             try {
+                 //设置监听 ，当发生通知产生 移除 ，更新时 会在其中调用相应方法
+                 mNotificationListener.registerAsSystemService(mContext,
+                         new ComponentName(mContext.getPackageName(), getClass().getCanonicalName()),
+                         UserHandle.USER_ALL);
+             } catch (RemoteException e) {
+                 Log.e(TAG, "Unable to register notification listener", e);
+             }
+
+
+             if (DEBUG) {
+                 Log.d(TAG, String.format(
+                         "init: icons=%d disabled=0x%08x lights=0x%08x menu=0x%08x imeButton=0x%08x",
+                        icons.size(),
+                        switches[0],
+                        switches[1],
+                        switches[2],
+                        switches[3]
+                        ));
+             }
+
+     //注册广播
+             mCurrentUserId = ActivityManager.getCurrentUser();
+             setHeadsUpUser(mCurrentUserId);
+
+             IntentFilter filter = new IntentFilter();
+             filter.addAction(Intent.ACTION_USER_SWITCHED);
+             filter.addAction(Intent.ACTION_USER_ADDED);
+             filter.addAction(Intent.ACTION_USER_PRESENT);
+             mContext.registerReceiver(mBroadcastReceiver, filter);
+
+             IntentFilter internalFilter = new IntentFilter();
+             internalFilter.addAction(WORK_CHALLENGE_UNLOCKED_NOTIFICATION_ACTION);
+             internalFilter.addAction(BANNER_ACTION_CANCEL);
+             internalFilter.addAction(BANNER_ACTION_SETUP);
+             mContext.registerReceiver(mBroadcastReceiver, internalFilter, PERMISSION_SELF, null);
+
+             IntentFilter allUsersFilter = new IntentFilter();
+             allUsersFilter.addAction(
+                     DevicePolicyManager.ACTION_DEVICE_POLICY_MANAGER_STATE_CHANGED);
+             mContext.registerReceiverAsUser(mAllUsersReceiver, UserHandle.ALL, allUsersFilter,
+                     null, null);
+             updateCurrentProfilesCache();
+
+             IVrManager vrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
+             try {
+                 vrManager.registerListener(mVrStateCallbacks);
+             } catch (RemoteException e) {
+                 Slog.e(TAG, "Failed to register VR mode state listener: " + e);
+             }
+
+          }
+
+</code></pre></div>    </div>
+
+    <p>由上面代码可见start()方法中主要做了如下操作：</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -    绑定Oberver  mContext.getContentResolver().registerContentObserver(
+         Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS),
+         true,
+         mLockscreenSettingsObserver,
+         UserHandle.USER_ALL);
+
+ -     设置监听 ，当发生通知产生 移除，更新时 会在其中调用相应方法
+     mNotificationListener.registerAsSystemService(mContext,
+             new ComponentName(mContext.getPackageName(), getClass().getCanonicalName()),
+             UserHandle.USER_ALL);
+ -       初始化通知视图  createAndAddWindows();
+
+ -      注册广播 mContext.registerReceiver(mBroadcastReceiver, filter);
+</code></pre></div>    </div>
+
+    <p><code class="highlighter-rouge"> 本次分析只分析和Notifaction 相关的部分 </code></p>
+  </li>
+  <li>
+    <p>其中的 mBroadcastReceiver 这个广播接受者 其中处理了notifaction 的事情：</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (Intent.ACTION_USER_SWITCHED.equals(action)) {
+                   .......
+                } else if (Intent.ACTION_USER_ADDED.equals(action)) {
+                    updateCurrentProfilesCache();
+                } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+                    .......
+                } else if (BANNER_ACTION_CANCEL.equals(action) || BANNER_ACTION_SETUP.equals(action)) {
+                    NotificationManager noMan = (NotificationManager)
+                            mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    noMan.cancel(R.id.notification_hidden);
+
+                    Settings.Secure.putInt(mContext.getContentResolver(),
+                            Settings.Secure.SHOW_NOTE_ABOUT_NOTIFICATION_HIDING, 0);
+                    if (BANNER_ACTION_SETUP.equals(action)) {
+                        animateCollapsePanels(CommandQueue.FLAG_EXCLUDE_RECENTS_PANEL,
+                                true /* force */);
+                        mContext.startActivity(new Intent(Settings.ACTION_APP_NOTIFICATION_REDACTION)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        );
+                    }
+                } else if (WORK_CHALLENGE_UNLOCKED_NOTIFICATION_ACTION.equals(action)) {
+                .........
+            }
+            };
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>mNotificationListener 此监听为分析的重点，这里负责新notification 产生后视图的创建和销毁</p>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```
+     private final NotificationListenerService mNotificationListener =
+                new NotificationListenerService() {
+            @Override
+            public void onListenerConnected() {
+                if (DEBUG) Log.d(TAG, "onListenerConnected");
+                final StatusBarNotification[] notifications = getActiveNotifications();
+                final RankingMap currentRanking = getCurrentRanking();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (StatusBarNotification sbn : notifications) {
+                            android.util.Log.d("czh","init  notification ");
+                            addNotification(sbn, currentRanking, null /* oldEntry */);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onNotificationPosted(final StatusBarNotification sbn,
+                    final RankingMap rankingMap) {
+                /// M: Enable this log for unusual case debug.
+                /*if (DEBUG)*/ Log.d(TAG, "onNotificationPosted: " + sbn);
+                if (sbn != null) {
+                    //redmine115450 duxinyun modify powsave music 20180103 begin
+                    String packageName = sbn.getPackageName();
+                    int open = Settings.System.getInt(mContext.getContentResolver(), Settings.System.POWER_SAVE_SWITCH, 0);
+                    if(open==1 &amp;&amp; !"com.android.mms".equalsIgnoreCase(packageName)&amp;&amp;
+                        !"com.android.calculator2".equalsIgnoreCase(packageName)&amp;&amp;
+                        !"com.android.deskclock".equalsIgnoreCase(packageName)&amp;&amp;
+                        !"com.android.soundrecorder".equalsIgnoreCase(packageName)&amp;&amp;
+                        !"com.android.dialer".equalsIgnoreCase(packageName)){
+                            removeNotification(sbn.getKey(), rankingMap);
+                            return;
+                    }
+                    //redmine115450 duxinyun modify powsave music 20180103 end
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            processForRemoteInput(sbn.getNotification());
+                            String key = sbn.getKey();
+                            mKeysKeptForRemoteInput.remove(key);
+                            boolean isUpdate = mNotificationData.get(key) != null;
+                            // In case we don't allow child notifications, we ignore children of
+                            // notifications that have a summary, since we're not going to show them
+                            // anyway. This is true also when the summary is canceled,
+                            // because children are automatically canceled by NoMan in that case.
+                            if (!ENABLE_CHILD_NOTIFICATIONS
+                                &amp;&amp; mGroupManager.isChildInGroupWithSummary(sbn)) {
+                                if (DEBUG) {
+                                    Log.d(TAG, "Ignoring group child due to existing summary: " + sbn);
+                                }
+
+                                // Remove existing notification to avoid stale data.
+                                if (isUpdate) {
+                                    removeNotification(key, rankingMap);
+                                } else {
+                                    mNotificationData.updateRanking(rankingMap);
+                                }
+                                return;
+                            }
+                            if (isUpdate) {
+                                updateNotification(sbn, rankingMap);
+                            } else {
+                                addNotification(sbn, rankingMap, null /* oldEntry */);
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNotificationRemoved(StatusBarNotification sbn,
+                    final RankingMap rankingMap) {
+                /// M: Enable this log for unusual case debug.
+                /*if (DEBUG)*/ Log.d(TAG, "onNotificationRemoved: " + sbn);
+                if (sbn != null) {
+                    final String key = sbn.getKey();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            removeNotification(key, rankingMap);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNotificationRankingUpdate(final RankingMap rankingMap) {
+                if (DEBUG) Log.d(TAG, "onRankingUpdate");
+                if (rankingMap != null) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateNotificationRanking(rankingMap);
+                    }
+                });
+            }                            }
+
+        };
+
+```
+
+本质上：NotificationListenerService extends Service  此为远程服务
+通过绑定此服务在底层对notification进行删除和添加，然后回调上面的方法,当一个新的通知产生后则先调用onNotificationPosted()
+然后调用BaseStatusBar 的addNotification()，而addNotification()由其子类PhoneStatusBar 实现：
+</code></pre></div></div>
+
+<ol>
+  <li>addNotification() 代码如下;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       public void addNotification(StatusBarNotification notification, RankingMap ranking,
+                 Entry oldEntry) {
+             if (DEBUG) Log.d(TAG, "addNotification key=" + notification.getKey());
+             /// M: [ALPS02738355] fix foreground service flag_hide_notification issue. @{
+             if (notification != null &amp;&amp; notification.getNotification() != null &amp;&amp;
+                    (notification.getNotification().flags &amp; Notification.FLAG_HIDE_NOTIFICATION) != 0) {
+                 Log.d(TAG, "Will not add the notification.flags contains FLAG_HIDE_NOTIFICATION");
+                 return;
+             }
+             /// @}
+             mNotificationData.updateRanking(ranking);
+             Entry shadeEntry = createNotificationViews(notification);
+             if (shadeEntry == null) {
+                 return;
+             }
+             boolean isHeadsUped = shouldPeek(shadeEntry);
+             if (isHeadsUped) {
+                 mHeadsUpManager.showNotification(shadeEntry);
+                 // Mark as seen immediately
+                 setNotificationShown(notification);
+             }
+
+             if (!isHeadsUped &amp;&amp; notification.getNotification().fullScreenIntent != null) {
+                 if (shouldSuppressFullScreenIntent(notification.getKey())) {
+                     if (DEBUG) {
+                         Log.d(TAG, "No Fullscreen intent: suppressed by DND: " + notification.getKey());
+                     }
+                 } else if (mNotificationData.getImportance(notification.getKey())
+                         &lt; NotificationListenerService.Ranking.IMPORTANCE_MAX) {
+                     if (DEBUG) {
+                         Log.d(TAG, "No Fullscreen intent: not important enough: "
+                                 - notification.getKey());
+                     }
+                 } else {
+                     // Stop screensaver if the notification has a full-screen intent.
+                     // (like an incoming phone call)
+                     awakenDreams();
+
+                     // not immersive &amp; a full-screen alert should be shown
+                     if (DEBUG)
+                         Log.d(TAG, "Notification has fullScreenIntent; sending fullScreenIntent");
+                     try {
+                         EventLog.writeEvent(EventLogTags.SYSUI_FULLSCREEN_NOTIFICATION,
+                                 notification.getKey());
+                         notification.getNotification().fullScreenIntent.send();
+                         shadeEntry.notifyFullScreenIntentLaunched();
+                         MetricsLogger.count(mContext, "note_fullscreen", 1);
+                     } catch (PendingIntent.CanceledException e) {
+                     }
+                 }
+             }
+             //cuizehui
+             if(notification.getKey().equalsIgnoreCase("0|com.android.systemui|2131886133|null|10033"))
+             {
+             android.util.Log.d("czh","not allow "+notification.getKey());
+             }
+             else{
+             android.util.Log.d("czh","equels  allow"+notification.getKey());
+             }
+             //
+             addNotificationViews(shadeEntry, ranking);
+                
+             // Recalculate the position of the sliding windows and the titles.
+             setAreThereNotifications();
+         }
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>调用 addNotificationViews(); //添加条目.此方法在BaseStatusBar 中实现：</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       protected void addNotificationViews(Entry entry, RankingMap ranking) {
+             if (entry == null) {
+                 return;
+             }
+
+             android.util.Log.d("czh","add_notificationview");
+                
+             // Add the expanded view and icon.
+             mNotificationData.add(entry, ranking);
+             updateNotifications();
+         }
+
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>调用子类PhoneStatusBar:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         protected void updateNotifications() {
+             mNotificationData.filterAndSort();
+
+             updateNotificationShade();
+             mIconController.updateNotificationIcons(mNotificationData);
+         }
+
+</code></pre></div>    </div>
+  </li>
+  <li>updateNotificationShade()：
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        private void updateNotificationShade() {
+            if (mStackScroller == null) return;
+
+            // Do not modify the notifications during collapse.
+            if (isCollapsing()) {
+                addPostCollapseAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateNotificationShade();
+                    }
+                });
+                return;
+            }
+
+            ArrayList&lt;Entry&gt; activeNotifications = mNotificationData.getActiveNotifications();
+            ArrayList&lt;ExpandableNotificationRow&gt; toShow = new ArrayList&lt;&gt;(activeNotifications.size());
+            final int N = activeNotifications.size();
+            for (int i=0; i&lt;N; i++) {
+                Entry ent = activeNotifications.get(i);
+                int vis = ent.notification.getNotification().visibility;
+
+                // Display public version of the notification if we need to redact.
+                final boolean hideSensitive =
+                        !userAllowsPrivateNotificationsInPublic(ent.notification.getUserId());
+                boolean sensitiveNote = vis == Notification.VISIBILITY_PRIVATE;
+                boolean sensitivePackage = packageHasVisibilityOverride(ent.notification.getKey());
+                boolean sensitive = (sensitiveNote &amp;&amp; hideSensitive) || sensitivePackage;
+                boolean showingPublic = sensitive &amp;&amp; isLockscreenPublicMode();
+                if (showingPublic) {
+                    updatePublicContentView(ent, ent.notification);
+                }
+                ent.row.setSensitive(sensitive, hideSensitive);
+                if (ent.autoRedacted &amp;&amp; ent.legacy) {
+                    // TODO: Also fade this? Or, maybe easier (and better), provide a dark redacted form
+                    // for legacy auto redacted notifications.
+                    if (showingPublic) {
+                        ent.row.setShowingLegacyBackground(false);
+                    } else {
+                        ent.row.setShowingLegacyBackground(true);
+                    }
+                }
+                if (mGroupManager.isChildInGroupWithSummary(ent.row.getStatusBarNotification())) {
+                    ExpandableNotificationRow summary = mGroupManager.getGroupSummary(
+                            ent.row.getStatusBarNotification());
+                    List&lt;ExpandableNotificationRow&gt; orderedChildren =
+                            mTmpChildOrderMap.get(summary);
+                    if (orderedChildren == null) {
+                        orderedChildren = new ArrayList&lt;&gt;();
+                        mTmpChildOrderMap.put(summary, orderedChildren);
+                    }
+                    orderedChildren.add(ent.row);
+                } else {
+                    toShow.add(ent.row);
+                }
+
+            }
+</code></pre></div>    </div>
+
+    <p>至此一个notification 则展示完全 ,可以发现最终显示在锁屏界面的通知栏是 ：ExpandableNotificationRow</p>
+  </li>
+</ol>
+
+<h3 id="应用">应用</h3>
+
+<p>可以分析当我们需要，拦截掉某些notification 不让其显示则可以在源头：onNotificationPosted 进行包名的过滤和拦截
+也可以在 addNotification() 限制其view 的添加和显示 addNotificationViews()不让其调用此方法</p>
+
+<h3 id="待分析">待分析</h3>
+
+<p>源头 ：NotificationListenerService</p>
+
+<p>删除一条notification的操作：</p>
+
+<ul>
+  <li>public void removeNotification(String key, RankingMap ranking);</li>
+  <li>updateRowStates-&gt;addNotification();  :    show Row</li>
+</ul>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/01/02/responsive-web/" data-toggle="tooltip" data-placement="top" title="Jekyll + github pages 搭建blog">
+                        Previous<br>
+                        <span>Jekyll + github pages 搭建blog</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/01/16/responsive-cuizehui/" data-toggle="tooltip" data-placement="top" title="Responsive Cuizehui">
+                        Next<br>
+                        <span>Responsive Cuizehui</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://huangxuan.me">huangxuan</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "nela";
+    var disqus_identifier = "/2018/01/05/responsive-android";
+    var disqus_url = "http://localhost:4000/2018/01/05/responsive-android/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/bu-chuan-wa-zi-nan-hai">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://music.163.com/#/user/home?id=32539043">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-music fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                  
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/cuizehui">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Nela Blog 2018
+                    <br>
+                    modify by <a >Nela</a> |
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'huangxuan.me';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+
+
+<!-- Multi-Lingual -->
+
+
+
+
+<!-- Image to hack wechat -->
+<img  width="0" height="0" />
+<!--  src="/img/icon_wechat.png" Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
