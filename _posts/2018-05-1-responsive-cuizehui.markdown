@@ -10,19 +10,20 @@ tags:
 
 # Hybrid混合开发
 ---
-##webview原生开发方式
 
-###js->webview|webview->js
+## webview原生开发方式
+
+### js->webview|webview->js
 
 参考以下博客：
 https://blog.csdn.net/carson_ho/article/details/64904691
 
-###文件上传（打开本地相册）
+### 文件上传（打开本地相册）
 
 
-##Agentweb框架使用
+## Agentweb框架使用
 
-###简介
+### 简介
 agentweb 是对webview进行的又一层封装较为轻量级
 所以基本的开发流程大致和webview原理相似
 将html5文件方入asset文件夹下，访问路径为
@@ -32,19 +33,20 @@ agentweb 是对webview进行的又一层封装较为轻量级
 
 ```
 
-####运行demo
+#### 运行demo
 此demo使用了bintray/Jcenter 这个东西
 Jcenter:看这个删除相关部分
 [https://blog.csdn.net/u013231041/article/details/70174354]
 需要在gradle 中将相关代码全部注释掉或者升级对应gradle 版本才能运行
 
-###使用过程
+### 使用过程
+
 1. 集成
 2. JS-调android
 3. Android 调 js
 官网给出的代码片段
 
-####Android 调js (此处待补充)
+#### Android 调js (此处待补充)
 
 ```
   function callByAndroid(){
@@ -55,7 +57,7 @@ mAgentWeb.getJsAccessEntrace().quickCallJs("callByAndroid");
       
 ```
 
-####js->Android
+#### js->Android
 
 ```
 //可理解为agentweb注册interface
@@ -112,7 +114,7 @@ html调用部分片段
       		},
 ```
 
-####input标签完成图片和照相并上传
+#### input标签完成图片和照相并上传
 
 html代码：
 
@@ -154,19 +156,19 @@ input标签拿到的其实是一个file对象可以直接使用，Filereader类�
 
 ```
 
-####打开调试功能
+#### 打开调试功能
 
 ```
  AgentWebConfig.debug();
 
 ```
-##H5-Android调试
+## H5-Android调试
 
-###环境搭建方式
+### 环境搭建方式
 chrome 插件： chrome://inspect/#devices
 允许usb 调试之后点击到对应的html 界面则手机id下方会有相应网址，点击即可进行支持调试的页面进行调试。
 注意初次使用需要翻墙
-###log开启
+### log开启
 
 需要开启如下代码支持调试
 
@@ -174,8 +176,8 @@ chrome 插件： chrome://inspect/#devices
 WebView.setWebContentsDebuggingEnabled(true);　
 ```
 
-##H5界面本地缓存
-####缓存打包方式
+## H5界面本地缓存
+#### 缓存打包方式
 
 ##
 
