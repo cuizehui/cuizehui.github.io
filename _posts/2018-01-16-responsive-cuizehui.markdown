@@ -178,12 +178,12 @@ now:
      - EventBus 
      - litepal  
      - butterknife 
-     - retifate
+     - retrofit
     
    
 3. MVP MVC 可以使用
    
-4. 网络框架没有学习过。
+4. 网络框架retrofit
    
 5. 了解apk 的发布流程 和其中的过程
    
@@ -216,8 +216,7 @@ future:
         3.搜索功能 ==
         4.排序 （）==
         5.个人中心模块完善 增添头像功能 ==
-        6.和HTML5 交互 =*
-        7.三方登陆网络交互 *
+        6.三方登陆网络交互 *
         8.三方登陆
 
 ### android 基础题目待办列表 ###
@@ -295,6 +294,7 @@ now:
  - ubuntu
  - adb
  - shell 
+ - mac
   
 future:
    
@@ -304,12 +304,13 @@ future:
 ##  Want to do ##
  
 1. 逆向工程
-2. smlite 语言
+2. python
 3. shell 
 
 ## work experience ##
 1.  宁波萨瑞通信
 2.  江西时空电子
+3.  juphoon
     
 ## link ## 
 
