@@ -13,20 +13,31 @@ tags:
 
 ## webview原生开发方式
 
-### js->webview|webview->js
+### js->webview&webview->js
 
 参考以下博客：
-https://blog.csdn.net/carson_ho/article/details/64904691
 
-### 文件上传（打开本地相册）
+[https://blog.csdn.net/carson_ho/article/details/64904691]()
+	
+[https://juejin.im/post/5a94f9d15188257a63113a74]()
 
+[https://juejin.im/post/5a94fb046fb9a0635865a2d6]()
+
+### webviewClient &webviewChromeClient
+
+webviewClient 是view显示相关api
+
+webviewChrome 是浏览器页面显示相关api 
+
+具体api 可以参考如下文章：
+[https://blog.csdn.net/harvic880925/article/details/51523983]()
 
 ## Agentweb框架使用
 
 ### 简介
 agentweb 是对webview进行的又一层封装较为轻量级
 所以基本的开发流程大致和webview原理相似
-将html5文件方入asset文件夹下，访问路径为
+将html5文件方入**asset**文件夹下，访问路径:
 
 ```
     final private String CoachFile = "file:///android_asset/teacher/info-teacher.html";
@@ -36,7 +47,8 @@ agentweb 是对webview进行的又一层封装较为轻量级
 #### 运行demo
 此demo使用了bintray/Jcenter 这个东西
 Jcenter:看这个删除相关部分
-[https://blog.csdn.net/u013231041/article/details/70174354]
+[https://blog.csdn.net/u013231041/article/details/70174354]()
+
 需要在gradle 中将相关代码全部注释掉或者升级对应gradle 版本才能运行
 
 ### 使用过程
@@ -56,7 +68,7 @@ Jcenter:看这个删除相关部分
 mAgentWeb.getJsAccessEntrace().quickCallJs("callByAndroid");
       
 ```
-
+**注意：** 要调用部分的代码要在script标签定义的fuction中才可以.
 #### js->Android
 
 ```
@@ -108,9 +120,6 @@ html调用部分片段
                   }else{
                      alert(typeof(window.android));
                   }
-
-
-
       		},
 ```
 
@@ -119,8 +128,7 @@ html调用部分片段
 html代码：
 
 ```
-		<input class="info_image"  type="file"  accept=*/*,"  capture="camera" @change = "uploadImg"/>	
-    	
+<input class="info_image"  type="file"  accept=*/*,"  capture="camera" @change = "uploadImg"/>		
 ```
 
 webview需要设置WebChromeClient，此框架对WebChromeClient进行封装，以便打开相册和拍照界面。
@@ -146,15 +154,29 @@ compile 'com.just.agentweb:filechooser:4.0.2'// (可选)
 
 input标签拿到的其实是一个file对象可以直接使用，Filereader类。
 也可以处理为url 那就要转化成绝对路径。
+
 ```
 		var files = event.target.files;
 		file = files[0];
-
 		var windowURL = window.URL || window.webkitURL;
       dataURL = windowURL.createObjectURL(file);
       //createObjectURL得到的是一个http格式的文件
 
 ```
+
+#### 其他配置
+
+拦截不相关跳转：
+
+``` 
+  .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
+
+```
+此段代码添加可能导致自己的文件路径被拦截导致无法跳转。
+
+#### 下拉刷新
+
+嵌套下拉刷新控件后要处理滑动事件冲突
 
 #### 打开调试功能
 
@@ -175,10 +197,10 @@ chrome 插件： chrome://inspect/#devices
 ```
 WebView.setWebContentsDebuggingEnabled(true);　
 ```
+## H5界面跳转后资源无法销毁
+```
+webView.destroy();
+```
 
-## H5界面本地缓存
-#### 缓存打包方式
-
-##
 
 
