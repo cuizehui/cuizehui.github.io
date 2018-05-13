@@ -205,7 +205,6 @@ now:
         
 future:
       
-- Tag的规范使用
 - 内存泄露的处理方式OOM
 - MVVM的深度学习（）demo 搭建demo （记笔记！）
 - 尝试框架集成使用Rxjava+Retorfit
@@ -215,10 +214,9 @@ future:
         2.分类 *
         3.搜索功能 ==
         4.排序 （）==
-        5.个人中心模块完善 增添头像功能 ==
-        6.三方登陆网络交互 *
-        8.三方登陆
-
+        5.路由总线框架搭建
+        6.sharePrafecne轻量框架
+ 			
 ### android 基础题目待办列表 ###
 1. android base   70%
 
@@ -284,6 +282,8 @@ future:
 		2.http协议分析处理
 		3.数据库操作事务处理
 		4.aop 面向切片编程
+		
+        
 
 
 ## tools ##
@@ -299,6 +299,7 @@ now:
 future:
    
 - linux 命令
+- vim
 
 
 ##  Want to do ##
