@@ -257,7 +257,7 @@ public class CalendarManager {
 
 接口的调用：
 
-```
+````
     @OnClick(R.id.add_event)
     public void addEvent() {
         CalendarManager calendarManager = new CalendarManager();
@@ -278,7 +278,7 @@ public class CalendarManager {
         CalendarManager calendarManager = new CalendarManager();
         calendarManager.insertAccount(mHomeStudentActivity);
     }
-```
+````
 
 其中eventID可以根据mobileAPI 传入的参数字组装 存入sharePrefences
 
