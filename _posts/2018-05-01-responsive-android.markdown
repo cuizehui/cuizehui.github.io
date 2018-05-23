@@ -5,7 +5,7 @@ date:       2018-05-01 20:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
-- Hybrid-App开发
+- Android-Application
 ---
 
 # Hybrid混合开发
