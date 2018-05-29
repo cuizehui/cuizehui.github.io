@@ -10,6 +10,10 @@ tags:
 
 ##   StatusBar  Notifaction       ##
 
+###   简介
+
+本文介绍了系统产生一个notifaction产生的流程，提供了如何在流程中加入拦截，拦截掉第三方应用的notification.
+
 ###  StatusBar通过Notifaction初始化通知条  ###
 
 PhoneStatusBar ->BaseStatusBar

@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Android消息提醒的几种方式"
+title:      "Android消息推送和提醒"
 date:       2018-05-12 12:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -8,7 +8,15 @@ tags:
 - Android-Application
 ---
 
-# Android消息提醒的几种方式
+# Android消息推送和提醒（Push/Calender）
+
+## 简介
+
+本文介绍两种app未在前台的情况下，如何进行有效的消息通知的方法。
+
+第一种方式调用系统日历api，插入日历事件在指定时间进行提示。
+
+第二种方式通过集成google推送,fireBase.唤醒app，或者提示一个notification.
 
 ## 使用系统Calendar 
 
@@ -282,4 +290,44 @@ public class CalendarManager {
 
 其中eventID可以根据mobileAPI 传入的参数字组装 存入sharePrefences
 
-## 使用push->Notifaction
+## 使用Push
+
+### 集成firebaseCloudMessage
+
+1. google play 11.8+
+2. 科学上网：[https://github.com/getlantern/forum/issues/833]()
+3. 谷歌上网助手 Chrome插件
+4. 手机科学上网：lantern :[https://github.com/getlantern/forum]()
+4. 倒入依赖的jar 如出现：找不到com.google.android.gms.internal.zzbck的类文件，怎注意版本匹配问题
+5. 校验本地是否有Google service的方法，需要:play-services-gcm:11.4.2 这个库
+	
+ 	`````
+	 dependencies {
+    compile 'com.google.firebase:firebase-core:11.4.2'
+    compile 'com.google.firebase:firebase-messaging:11.4.2'
+    compile "com.google.android.gms:play-services-gcm:11.4.2"
+}
+apply plugin: 'com.google.gms.google-services'
+
+	`````
+
+### 客户端流程
+
+1. 生成app token 上传至服务器
+2. 生成某些模版数据上传至服务器
+3. 将注册的applacation key 生成的service ID 和sendID 给到服务端，使服务端可以和fcm服务器通信
+4. 定义通讯的消息协议（上行xmpp等并不常用）
+5. 接受消息onMessageReceived 
+
+### 服务器
+1. 需要apk 提供的serviceID  需要sendID
+2. 接收apk token和其他的 app端参数
+3. 和firebase 服务器协议交互
+
+### 参考
+[https://firebase.google.com/docs/android/setup]()
+[https://www.jianshu.com/p/5d1982dd588b]()
+[https://blog.csdn.net/newhope1106/article/details/54709916]()
+
+### 注意事项
+可能会频繁的和服务器端人员进行交互。请准备好如上知识，心平气和的学习一波。嘻嘻

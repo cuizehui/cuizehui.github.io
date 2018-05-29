@@ -10,6 +10,13 @@ tags:
 
 # Hybrid混合开发
 ---
+## 简介
+
+本文提供了如何使用原生webview和android交互的相关资料。
+
+着重介绍了如何使用AgentWeb 进行混合开发，从sdk集成到重点api的调用，和相关功能的配置，并介绍了如何加入下拉刷新功能。
+
+最后介绍了，如何对webview进行调试，提供了h5-android的界面简单的路由跳转思路 ，利用eventBus通知h5重绘的事件的方法。
 
 ## webview原生开发方式
 

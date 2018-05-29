@@ -9,6 +9,9 @@ tags:
 ---
 ## Jekyll + github pages 搭建blog  ##
 
+### 简介
+  本文说明如何github +jekyll 搭建blog.
+
 ###  搭建步骤  ###
  1. github 项目建立
  2. jekyll 测试环境搭建:
