@@ -281,11 +281,9 @@ now:
 
 future:
 
-		1.jqueary  
-		2.http协议分析处理
-		3.数据库操作事务处理
-		4.aop 面向切片编程
-		
+		1.es6
+		2.vue
+				
         
 
 
