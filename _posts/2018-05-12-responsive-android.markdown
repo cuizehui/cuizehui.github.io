@@ -55,7 +55,15 @@ apply plugin: 'com.google.gms.google-services'
 2. 接收apk token和其他的 app端参数
 3. 和firebase 服务器协议交互
 
+### 注意
 
+如果服务器发送错误码可参考如下提示：
+
+[https://firebase.google.com/docs/cloud-messaging/http-server-ref?hl=zh-cn]()
+
+400 检查 json是否拼接发生错误
+504 网络是否超时
+后端可控制发送的消息是前台消息还是穿透消息
 
 ## 使用系统Calendar 
 

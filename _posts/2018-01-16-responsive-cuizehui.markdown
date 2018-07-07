@@ -176,16 +176,16 @@ now:
 
     
 2. 掌握基本框架使用
-      
-     - Dagger2 
-     - EventBus 
-     - litepal  
+     
+     - EventBus  
      - butterknife 
      - retrofit
+     - smartRefresh
+     - agentWeb
+     - Dagger2 
     
-   
 3. MVP MVC 可以使用
-   
+
 4. 网络框架retrofit
    
 5. 了解apk 的发布流程 和其中的过程
@@ -207,19 +207,14 @@ now:
 
         
 future:
-      
-- 内存泄露的处理方式OOM
-- MVVM的深度学习（）demo 搭建demo （记笔记！）
+
 - 尝试框架集成使用Rxjava+Retorfit
-- 商城类APP功能开发
+- 内存泄露性能优化相关工具使用
         
-        1.下拉刷新 ==
-        2.分类 *
-        3.搜索功能 ==
-        4.排序 （）==
-        5.路由总线框架搭建
-        6.sharePrafecne轻量框架
- 			
+        1.数据库框架
+        2.路由总线框架搭建
+        3.sharePrafecne轻量框架
+ 		
 ### android 基础题目待办列表 ###
 1. android base   70%
 
@@ -283,19 +278,18 @@ future:
 
 		1.es6
 		2.vue
-				
-        
-
 
 ## tools ##
 now: 
    
- - androidstudio 
- - eclipse
+ - mac os
  - ubuntu
+ - windows
+ - android studio 
+ - eclipse
  - adb
  - shell 
- - mac
+ - npm
   
 future:
    
@@ -304,10 +298,11 @@ future:
 
 
 ##  Want to do ##
- 
-1. 逆向工程
-2. python
-3. shell 
+
+1. vue
+2. 逆向工程
+3. python
+4. shell 
 
 ## work experience ##
 1.  宁波萨瑞通信
