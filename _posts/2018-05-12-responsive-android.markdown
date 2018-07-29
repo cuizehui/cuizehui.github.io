@@ -213,7 +213,7 @@ public class CalendarManager {
 
     /**
      * @param context
-     * @param calID          日历事件id
+     * @param calID          日历账户id
      * @param calenderMillis 时间段数组
      * @param title          事件主题
      * @param description    事件描述
@@ -276,6 +276,8 @@ public class CalendarManager {
     }
     
 ```
+**注意 CalendarContract.Events.CALENDAR_ID 不可随意填写，按照插入的顺序决定是第几个calendarID **
+
 
 #### 生成日历事件提醒
 

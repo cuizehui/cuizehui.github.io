@@ -280,6 +280,8 @@ binder创建好后则需要通过ServiceManager注册至系统内核，同理也
 ***解决方案：***
 
 - 将apkpush至系统system/priv-app 使其变成系统apk，再次尝试
+- 删除旧的系统apk 需要权限，需执行如下代码获取读写权限 mount -o remount rw  /system
+
 具体过程
 参考如下文章：
 [https://blog.csdn.net/starhosea/article/details/78697007]()
@@ -348,8 +350,10 @@ activityServiceManager是系统内核控制的。
 
 ### 后续完善
 
-可能会首次获取binder,linux进程还未启动
-重连机制等都和业务相关这里就多做说明。
+判断网络&重连机制
+
+### 代码地址
+[https://github.com/cuizehui/PushAPK-Binder]()
 
 ## 参考文章
 
