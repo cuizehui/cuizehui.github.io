@@ -258,6 +258,14 @@ public class RouterTable {
 
 ```
 
+### H5使用vue框架搭建手脚架
+
+```
+put(COACH_ASSIGNMENT_FILE, "file:///android_asset/index.html#teacher/plan/studentList");
+```
+
+使用url传递参数后 脚手架解析方式需要发生改变。
+
 
 ## 页面间通知刷新
 
