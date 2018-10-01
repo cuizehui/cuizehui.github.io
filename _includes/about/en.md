@@ -12,12 +12,12 @@
  - 崔泽辉/男/1994 
  - **本科/华东交通大学** 物联网工程系 
  - 工作年限：**2年**
- - 技术博客：[http://blog.cuizehui.github.io]() 
- - CSDN博客：[http://blog.csdn.net/cuizehui123]()
- - GitHub：[https://github.com/cuizehui]()
+ - 技术博客：[http://blog.cuizehui.github.io](http://blog.cuizehui.github.io) 
+ - CSDN博客：[http://blog.csdn.net/cuizehui123](http://blog.cuizehui.github.io)
+ - GitHub：[https://github.com/cuizehui](http://blog.cuizehui.github.io)
 
- - 期望职位：Android应用开发工程师
- - 期望薪资：12k-15k
+ - 期望职位：Android开发工程师
+ - 期望薪资：
 
 ---
 
@@ -93,14 +93,17 @@ agentweb框架，给h5提供登陆能力和通话能力。基于agentWeb框架�
 
 ## 毕设项目
 
- - [Estore](https://github.com/cuizehui/Estore)：商城类APP
- - [Estore](http://blog.csdn.net/cuizehui123/article/details/78290555)作品描述
- - [叶子助手](https://github.com/cuizehui/mobilesolder)：手机管家类APP
+ - [BinderPushApk](https://github.com/cuizehui/PushAPK-Binder) Binder通信实现小米推送apk
+ - [Estore](https://github.com/cuizehui/Estore)：毕设：商城类APP
 
+ 
 ## 技术文章
 
-- [Android 源码编译流程分析](https://cuizehui.github.io/2018/01/20/responsive-android/) 
+- [进程间通信-Binder实战:https://cuizehui.github.io/2018/07/07/responsive-android/](https://cuizehui.github.io/2018/07/07/responsive-android/) 
 
+- [sdk接口自动化测试:https://cuizehui.github.io/2018/09/25/responsive-android/](https://cuizehui.github.io/2018/09/25/responsive-android/)
+
+- [H5-webViewApp开发总结:https://cuizehui.github.io/2018/05/01/responsive-android/](https://cuizehui.github.io/2018/05/01/responsive-android/)
 
 # 致谢
 感谢您花时间阅读我的简历，期待能有机会和您共事。

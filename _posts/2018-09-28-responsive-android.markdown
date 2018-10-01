@@ -14,15 +14,19 @@ tags:
 
 ### 简介
 
-第一篇通过反射测试sdk接口，部分接口会产生回调方法，我们需要将回调结果上传至服务器。
-那么如果我们手工在各个接口中将返回值依次组json,那么将是一个巨大的工程。
+[第一篇](https://cuizehui.github.io/2018/09/25/responsive-android/)通过反射测试sdk接口，部分接口会产生回调方法，我们需要将回调结果上传至服务器。
+
+但如果我们手工在各个接口中将返回值依次组json,那么将是一个巨大的工程。
 所以我们通过动态代理方式，将回执数据组包，自动发送到socket模块回执给服务器。
 
 ### 实验demo
 
-[https://github.com/MatrixSeven/JavaAOP](AOPdemo)
-由于此demo，中没有代理回调。因此我又改写了Demo
-[https://github.com/cuizehui/CallBackProxyDemo/tree/master/app/src/main/java/CallBackProxyDemo](动态代理回调接口Demo)
+AOPDemo:
+[JavaAopDemo](https://github.com/MatrixSeven/JavaAOP)
+
+由于此demo，中没有代理回调。因此我又修改此Demo:
+
+[CallBackProxyDemo](https://github.com/cuizehui/CallBackProxyDemo/tree/master/app/src/main/java/CallBackProxyDemo)
 
 ### 动态代理本质 
 
@@ -39,12 +43,14 @@ tags:
     }
 ```
 
-**注意**
-在java中，jdk实现动态代理的主要不足在于：它只能代理实现了接口的类，如果一个类没有继承于任何的接口，那么就不能代理该类，原因是我们动态生成的所有代理类都必须继承Proxy这个类，正是因为Java的单继承，所以注定会抛弃原类型的父类。
+**注意:**
+在java中，jdk实现动态代理的主要不足在于,***它只能代理实现了接口的类***，如果一个类没有继承于任何的接口，那么就不能代理该类，原因是我们动态生成的所有代理类都必须继承Proxy这个类，正是因为Java的单继承，所以注定会抛弃原类型的父类。
 
 ### 组包代码
 
-最终组包，采用了Gson工具将对象转为Json数据。但在inviote中某些object对象转好只是地址值，因此做了args[i].getClass()特殊处理。
+最终组包，将对象转为Json也是巨大工程，因此采用了Gson工具将对象转为Json数据。
+
+但在invoke中某些object对象转好只是地址值，因此做了args[i].getClass()特殊处理。
 
 ```
     @Override
@@ -95,11 +101,11 @@ tags:
 
 ## 反射注入
 
-在AopDemo的同时发现了此demo。
-[https://github.com/ximsfei/RefInject](反射注入框架)
+在AopDemo的同时发现了此demo:[反射注入框架](https://github.com/ximsfei/RefInject)
+
 其原理为通过定义一个和要反射注入类相同结构的类，通过封装反射方法，获取到注入对象的成员和方法进行动态调用。
 
-### 简介
+### 反射注入简介
 
 在运行期动态的将运行期变量替换，或执行某个方法。
 此技术应用于插件化开发。用来替换某个模块或控件等。

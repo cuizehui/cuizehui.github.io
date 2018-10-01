@@ -1,14 +1,14 @@
 ---
 layout:     post
-title:      "Android—自动编译"
+title:      "Android—Jenkins自动编译"
 date:       2018-09-12 23:18:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
 - Android-Application
----、	
+---	
 
-# 自动编译
+# Jenkins自动编译
 
 ## 简介
  
@@ -21,7 +21,7 @@ tags:
 
 ## jenkins流程
 
-流程如下：钩子脚本触发构建(jenkinsfile)-拉源码(git插件配置)-> 执行本地编译脚本(build.sh)->编译构建(gradle/sdk/jdk环境)->生成构建成果
+流程如下：钩子脚本触发构建(jenkinsFile)-拉源码(git插件配置)-> 执行本地编译脚本(build.sh)->编译构建(gradle/sdk/jdk环境)->生成构建成果
 
 ### 基本模式
 
