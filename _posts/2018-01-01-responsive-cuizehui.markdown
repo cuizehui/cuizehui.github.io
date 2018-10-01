@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Past and future"
-date:       2018-01-16 20:58:00
+date:       2018-01-01 20:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
