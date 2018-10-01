@@ -173,16 +173,19 @@ now:
 1. 项目 
     - 智慧新闻 
     - 商城
+    - AgentWeb混合开发
+   
 
     
 2. 掌握基本框架使用
      
      - EventBus  
      - butterknife 
-     - retrofit
+     - retrofit2
      - smartRefresh
      - agentWeb
      - Dagger2 
+     - glide
     
 3. MVP MVC 可以使用
 
@@ -190,7 +193,9 @@ now:
    
 5. 了解apk 的发布流程 和其中的过程
    
+   		
        - 混淆
+       - gradle
        - 签名
        - 反编译
        - crash
@@ -204,7 +209,7 @@ now:
      - User全局变量的控制流程
      - 布局的调试方式DDMS 截屏
      - AIDL 跨进程通信 传输序列化对象！
-
+     - binder ipc 通信
         
 future:
 
@@ -245,6 +250,14 @@ future:
 
 			8月：bindler ipc+4大组件启动模式+消息处理机制looper
 
+## Android SDK ##
+
+1. 接口规范
+2. doodle 自定义view
+3. push 流程
+4. ipc binder
+
+ f
 
 
 ## web ##
@@ -272,12 +285,13 @@ now:
 		- js
 		- html
 		- css
-
+		
 
 future:
 
 		1.es6
 		2.vue
+	
 
 ## tools ##
 now: 
@@ -295,6 +309,7 @@ future:
    
 - linux 命令
 - vim
+- jenkis 自动编译，持续集成
 
 
 ##  Want to do ##
