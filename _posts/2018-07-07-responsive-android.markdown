@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "Android进程间通信-Binder实战"
+subtitle:   "记录通过binder通信+小米push使natave具有push能力的完整过程"
 date:       2018-07-07 21:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -59,7 +60,7 @@ linux进程服务想要获得推送功能。但c层无法实现。实现思路�
 
 **第一步.** 生成Binder服务：
 
-```
+```c
 android::status_t CJuBinder::onTransact( uint32_t code, const android::Parcel& data, android::Parcel* reply, uint32_t flags)
 {
     Mtc_AnyLogInfoStr((ZCHAR*)"CJuBinder", (ZCHAR*)"CJuBinder::onTransact code:%d", code);
@@ -89,7 +90,7 @@ onTansact为服务端需要实现的方法，其中code是service和client约定
 
 **第二步.** 注册binder服务至系统内核
 
-```
+```c
 int CJuBinder::RegisterService()
 {
     android::sp<android::IServiceManager> sm = android::defaultServiceManager();
@@ -116,7 +117,7 @@ int CJuBinder::RegisterService()
 首先通过ide发现，android并没有serviceManager这个类。那么我们通过反射获取serviceManager对象并调用getService方法获取IBinder.
 
 
-```
+```java
  private static IBinder getRemoteBinder() {
         try {
             Class serviceManager = Class.forName("android.os.ServiceManager");
@@ -141,7 +142,7 @@ int CJuBinder::RegisterService()
 **第二步.**调用方法
 
 
-```
+```java
 public boolean sendTokenAndPackageName(Context context, String token) {
         Log.d(TAG, "enforceInterface");
         mContext = context;
@@ -191,7 +192,7 @@ public boolean sendTokenAndPackageName(Context context, String token) {
 
 **第一步.**实现Binder，继承binder对象
 
-```
+```java
 public class LocalBinder extends Binder implements IPushInterface {
 
     public static String TAG = "LocalBinder";
@@ -224,7 +225,7 @@ public class LocalBinder extends Binder implements IPushInterface {
 
 实现IInterface接口
 
-```
+```java
 
 public interface IPushInterface extends IInterface{
 
@@ -245,7 +246,7 @@ attachInterface也是接口标示，而queryLocalInterface则和我们后面说�
 
 binder创建好后则需要通过ServiceManager注册至系统内核，同理也是通过反射调用addService：
 
-```
+```java
    try {
             Class serviceManager = Class.forName("android.os.ServiceManager");
             Method method = serviceManager.getMethod("addService", String.class,IBinder.class);
@@ -297,7 +298,7 @@ binder创建好后则需要通过ServiceManager注册至系统内核，同理也
 
 通过IBinder提供的api：linkToDeath/unlinkToDeath
 
-```
+```java
 mRemoteBinder.linkToDeath(mdeathRecipient, 0);
  
 IBinder.DeathRecipient mdeathRecipient = new IBinder.DeathRecipient() {
@@ -316,7 +317,7 @@ IBinder.DeathRecipient mdeathRecipient = new IBinder.DeathRecipient() {
 
 测试方法：
 
-```
+```java
 adb shell
 ps | gerp "进程名"
 kill 进程id
@@ -331,7 +332,7 @@ kill 进程id
 
 service通过readStringBinder()即可获取。并调用传递binder定义的接口方法完成回调。
 
-```
+```java
 _data.writeStrongBinder(localBinder.asBinder());
 ```
 

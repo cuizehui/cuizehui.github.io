@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "接口自动化测试(一)--反射模块"
+subtitle:   "讲述一次完整的自动化测试方案"
 date:       2018-09-25 12:56:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -37,7 +38,7 @@ tags:
 根据给定数据结构json,构造的实体类对象。提供给发射模块调用。
 例如定义的测试数据如下结构：
 
-```
+```json
 {
     "type":"command",
     "module":"client",
@@ -60,7 +61,7 @@ tags:
 
 因此我们采用如下方式解析json。当此参数类型，为非基本数据类型时（object）时。translateType方法做了特殊处理，也可以通过传递的数据，反射组建此对象。
 
-```
+```java
   JSONArray prams = jsonObject.optJSONArray("params");
         if (prams != null) {
             List<HashMap<Class<?>, Object>> pramsList = new ArrayList();
@@ -85,7 +86,7 @@ tags:
    
  **注意** 在转化class<?> 时做特殊处理。 这里是根据业务逻辑，获取了该获取的对象并返回。
    
-```
+```java
     public Class<?> translateType(String key) {
         Class<?> pramsType = null;
         if (TextUtils.equals("bool", key)) {
@@ -131,13 +132,13 @@ tags:
 
 1. 通过类名获取对象：
 
-```
+```java
     Class<?> object = Class.forName(className);
 ```
 
 2. 通过.class 方法获取对象，编译期就能检测的创建对象方式。优势是更加安全，在编译期可预知。此方法我们在编译期无法预知要测试的类，所以不可行。
 
-```
+```java
    	jcManager.getClass().newInstance();
 ```
 
@@ -145,7 +146,7 @@ tags:
 
 1. 调用静态方法
 
-    ```
+    ```java
      /**
          * 
          * @param T 返回值类型
@@ -185,7 +186,7 @@ tags:
 
     ***需要产生一个实例**
     
-    ```
+    ```java
       /**
          * 调用成员函数
          * @param T
@@ -222,7 +223,7 @@ tags:
 
     **getfield public field ，getDeclaredFields  与访问权限无关**
     
-    ```
+    ```java
         /**
         *	className 类名
         * 	fieldName 成员变量名
@@ -241,7 +242,7 @@ tags:
 
 4. 将成员转化成实例对象
 
-    ```
+    ```java
     //次obj 为该成员所属的对象实例。
     field.get(obj)
     //需要field类型的成员变量，在此obj中确实已经实例化，否则receiver null 异常
@@ -256,7 +257,7 @@ tags:
 
 范型处理返回值：
 
-```
+```java
 public <T> T method(Class<T> T){
 		...
 		
@@ -271,7 +272,7 @@ public <T> T method(Class<T> T){
 
 不定长参数可以传递数组：
 
-``` 
+```java 
       @CallerSensitive
     public Method getMethod(String name, Class<?>... parameterTypes)
         throws NoSuchMethodException, SecurityException {

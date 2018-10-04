@@ -73,7 +73,7 @@ need clone?-> copyfile ->sed　config-> makeNelaAction-> SOAP原生编译方式
 
 [-->file_name: mk]
 
-```
+```shell
     #!/usr/bin/perl
 
     #[Nela][Nela_COMPILE_ENV]
@@ -338,7 +338,7 @@ need clone?-> copyfile ->sed　config-> makeNelaAction-> SOAP原生编译方式
 
 [-->file_name:clone.sh]
 
-```
+```shell
             #!/bin/bash
 
             ＃modem 处理此处不看
@@ -371,7 +371,7 @@ need clone?-> copyfile ->sed　config-> makeNelaAction-> SOAP原生编译方式
 此处按照猜测应该分为两部分　，一部分copy替换文件，一部分替换宏控
 
 [-->file_name:clone_mmi.sh]
-``` 
+``` shell
             //此处为宏控字段替换的核心函数
             function write_xml()
             {

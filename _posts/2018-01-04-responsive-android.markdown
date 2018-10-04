@@ -22,7 +22,7 @@ PhoneStatusBar ->BaseStatusBar
 
 2.  SystemUIserVice
 
-    ```
+    ```java
         private final Class<?>[] SERVICES = new Class[] {
                 com.android.systemui.tuner.TunerService.class, //定制状态栏服务
                 com.android.systemui.keyguard.KeyguardViewMediator.class,//锁屏模块
@@ -45,7 +45,7 @@ PhoneStatusBar ->BaseStatusBar
 
 4. BaseStatusBar start():
 
-    ```
+    ```java
             public void start() {
 
                 //注册服务
@@ -217,7 +217,7 @@ PhoneStatusBar ->BaseStatusBar
 
 5.  其中的 mBroadcastReceiver 这个广播接受者 其中处理了notifaction 的事情：
 
-    ```
+    ```java
             private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -251,7 +251,7 @@ PhoneStatusBar ->BaseStatusBar
 
 6.   mNotificationListener 此监听为分析的重点，这里负责新notification 产生后视图的创建和销毁
 
-    ```
+    ```java
          private final NotificationListenerService mNotificationListener =
                     new NotificationListenerService() {
                 @Override
@@ -360,7 +360,7 @@ PhoneStatusBar ->BaseStatusBar
     然后调用BaseStatusBar 的addNotification()，而addNotification()由其子类PhoneStatusBar 实现：
 
 7. addNotification() 代码如下; 
-    ```
+    ```java
           public void addNotification(StatusBarNotification notification, RankingMap ranking,
                     Entry oldEntry) {
                 if (DEBUG) Log.d(TAG, "addNotification key=" + notification.getKey());
@@ -430,7 +430,7 @@ PhoneStatusBar ->BaseStatusBar
 
 8. 调用 addNotificationViews(); //添加条目.此方法在BaseStatusBar 中实现：
 
-    ```
+    ```java
           protected void addNotificationViews(Entry entry, RankingMap ranking) {
                 if (entry == null) {
                     return;
@@ -447,7 +447,7 @@ PhoneStatusBar ->BaseStatusBar
 
 9. 调用子类PhoneStatusBar:
 
-    ```
+    ```java
             protected void updateNotifications() {
                 mNotificationData.filterAndSort();
 
@@ -458,7 +458,7 @@ PhoneStatusBar ->BaseStatusBar
     ```
 
 10. updateNotificationShade()：
-    ```
+    ```java
             private void updateNotificationShade() {
                 if (mStackScroller == null) return;
 

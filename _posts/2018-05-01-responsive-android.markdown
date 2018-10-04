@@ -41,7 +41,7 @@ webviewChrome 是浏览器页面显示相关api
 
 ### 页面回退&页面销毁&页面刷新
 
-```
+```java
 mWebView.goBack();   
 mWebView.goForward()
 mWebView.loadurl();
@@ -60,8 +60,8 @@ agentweb 是对webview进行的又一层封装较为轻量级
 所以基本的开发流程大致和webview原理相似
 将html5文件方入**asset**文件夹下，访问路径:
 
-```
-    final private String CoachFile = "file:///android_asset/teacher/info-teacher.html";
+```java
+final private String CoachFile = "file:///android_asset/teacher/info-teacher.html";
 
 ```
 
@@ -81,7 +81,7 @@ Jcenter:看这个删除相关部分
 
 #### Android 调js (此处待补充)
 
-```
+```java
   function callByAndroid(){
       console.log("callByAndroid")
   }
@@ -92,7 +92,7 @@ mAgentWeb.getJsAccessEntrace().quickCallJs("callByAndroid");
 **注意：** 要调用部分的代码要在script标签定义的fuction中才可以.
 #### js->Android
 
-```
+```java
 //可理解为agentweb注册interface
 mAgentWeb.getJsInterfaceHolder().addJavaObject("android",new AndroidInterface(mAgentWeb,this));
 window.android.callAndroid();
@@ -101,7 +101,7 @@ window.android.callAndroid();
 AndroidInterface
 
 
-```
+```java
  public class AndroidInterface {
 
     private Handler deliver = new Handler(Looper.getMainLooper());
@@ -138,23 +138,23 @@ AndroidInterface
 
 html调用部分片段
 
-```
-	getLocalData:function(){
+```java
+getLocalData:function(){
 
-                  if(window.android!=null&&typeof(window.android)!="undefined"){
-                      id=window.android.getID();
-                     alert(" : "+id);
-                  }else{
-                     alert(typeof(window.android));
-                  }
-      		},
+				if(window.android!=null&&typeof(window.android)!="undefined"){
+					id=window.android.getID();
+					alert(" : "+id);
+				}else{
+					alert(typeof(window.android));
+				}
+		},
 ```
 
 #### input标签完成图片和照相并上传
 
 html代码：
 
-```
+```html
 <input class="info_image"  type="file"  accept=*/*,"  capture="camera" @change = "uploadImg"/>		
 ```
 
@@ -163,7 +163,7 @@ webview需要设置WebChromeClient，此框架对WebChromeClient进行封装，�
 实现类为：MiddlewareChromeClient | MiddlewareWebViewClient
 agentweb进行如下设置：
 
-```
+```java
 mAgentWeb = AgentWeb.with(this)//
                 .useMiddlewareWebClient(getMiddlewareWebClient())
                 .useMiddlewareWebChrome(getMiddlewareWebChrome())
@@ -173,7 +173,7 @@ mAgentWeb = AgentWeb.with(this)//
 
 在manifest中引入如下依赖：
 
-```
+```groovy
 compile 'com.just.agentweb:filechooser:4.0.2'// (可选)
 ```
 
@@ -182,17 +182,17 @@ compile 'com.just.agentweb:filechooser:4.0.2'// (可选)
 input标签拿到的其实是一个file对象可以直接使用，Filereader类。
 也可以处理为url 那就要转化成绝对路径。
 
-```
-		var files = event.target.files;
-		file = files[0];
-		var windowURL = window.URL || window.webkitURL;
-      dataURL = windowURL.createObjectURL(file);
-      //createObjectURL得到的是一个http格式的文件
+```java
+var files = event.target.files;
+file = files[0];
+var windowURL = window.URL || window.webkitURL;
+dataURL = windowURL.createObjectURL(file);
+//createObjectURL得到的是一个http格式的文件
 
 ```
 #### 刷新|回退|销毁
 
-```
+```java
 mAgentWeb.getUrlLoader().reload();
 
 if (mAgentWeb.getWebCreator().getWebView().canGoBack()) {
@@ -210,7 +210,7 @@ mAgentWeb.getWebLifeCycle().onDestroy();
 
 拦截不相关跳转：
 
-``` 
+``` java
   .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
 
 ```
@@ -220,13 +220,13 @@ mAgentWeb.getWebLifeCycle().onDestroy();
 
 使用次第三方库解决下拉刷新smartrefresh
 
-```
+```groovy
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
 ```
 
 #### 打开调试功能
 
-```
+```java
  AgentWebConfig.debug();
 
 ```
@@ -236,7 +236,7 @@ mAgentWeb.getWebLifeCycle().onDestroy();
 由于native经常会跳转至不同的html资源文件，所以我们构造了路由表。
 本质上是一个hashmap. 此种方式是一个简单解决跳转的方法，如果app内跳转逻辑过多需要组件化开发，可以考虑集成相关路由框架（Activityrouter）框架。
 
-```
+```java
 
 public class RouterTable {
 
@@ -260,7 +260,7 @@ public class RouterTable {
 
 ### H5使用vue框架搭建手脚架
 
-```
+```java
 put(COACH_ASSIGNMENT_FILE, "file:///android_asset/index.html#teacher/plan/studentList");
 ```
 
@@ -273,69 +273,69 @@ put(COACH_ASSIGNMENT_FILE, "file:///android_asset/index.html#teacher/plan/studen
 
 1. 定义事件基类
 
-	 ```
-		 public class HTEvent {
-		    /**
-		     * 事件类型
-		     */
-		    @IntDef({TYPE_REFRESH})
-		    @Retention(RetentionPolicy.SOURCE)
-		    private @interface Type {
-		    }
-		
-		    /**
-		     * 刷新事件
-		     */
-		    public static final int TYPE_REFRESH = 0;
-		    public @Type
-		    int type;
-		
-		    public HTEvent(@Type int eventType) {
-		        this.type = eventType;
-		    }
-		
+	 ```java
+		public class HTEvent {
+		/**
+			* 事件类型
+			*/
+		@IntDef({TYPE_REFRESH})
+		@Retention(RetentionPolicy.SOURCE)
+		private @interface Type {
 		}
+	
+		/**
+			* 刷新事件
+			*/
+		public static final int TYPE_REFRESH = 0;
+		public @Type
+		int type;
+	
+		public HTEvent(@Type int eventType) {
+			this.type = eventType;
+		}
+	
+	}
 	
 	```
 
 2. 定义重绘事件，定义对应key
 	
-	```
-		public class HTRefreshEvent extends HTEvent {
-			
-		/**
-		 * 事件类型
-		 */
-		@IntDef({Type_Refresh_Student_Appointment, Type_Refresh_Coach_Service})
-		@Retention(RetentionPolicy.SOURCE)
-		private @interface Refresh_Type {
-			
-		}
-			
-		/**
-		 * 刷新学生Appointment
-		 */
-		public static final int Type_Refresh_Student_Appointment = 0;
-		/**
-		 * 刷新教师Service
-		 */
-		public static final int Type_Refresh_Coach_Service = 1;
-			
-		public @Refresh_Type
-		int refreshType;
-			
-		public HTRefreshEvent(int eventType, @Refresh_Type int refreshType) {
-		    super(eventType);
-		    this.refreshType = refreshType;
-	    }
-		}
+	```java
+	public class HTRefreshEvent extends HTEvent {
+		
+	/**
+		* 事件类型
+		*/
+	@IntDef({Type_Refresh_Student_Appointment, Type_Refresh_Coach_Service})
+	@Retention(RetentionPolicy.SOURCE)
+	private @interface Refresh_Type {
+		
+	}
+		
+	/**
+		* 刷新学生Appointment
+		*/
+	public static final int Type_Refresh_Student_Appointment = 0;
+	/**
+		* 刷新教师Service
+		*/
+	public static final int Type_Refresh_Coach_Service = 1;
+		
+	public @Refresh_Type
+	int refreshType;
+		
+	public HTRefreshEvent(int eventType, @Refresh_Type int refreshType) {
+		super(eventType);
+		this.refreshType = refreshType;
+	}
+	}
 	
 	```
 
 
 3. 接受相应刷新事件
 
-	```
+	```java
 	@Subscribe
 	    public void onEvent(HTEvent event){
 	        if(event.type==HTEvent.TYPE_REFRESH){
@@ -360,6 +360,6 @@ put(COACH_ASSIGNMENT_FILE, "file:///android_asset/index.html#teacher/plan/studen
 
 需要开启如下代码支持调试
 
-```
+```java
 WebView.setWebContentsDebuggingEnabled(true);　
 ```

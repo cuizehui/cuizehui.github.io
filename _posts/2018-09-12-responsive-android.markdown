@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "Android—Jenkins自动编译"
+subtitle:   "记录Jenkins自动编译流程和脚本"
 date:       2018-09-12 23:18:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -61,7 +62,7 @@ Could not generate a proxy class for BuildArtifactReportTask
 
 ### 基础编译命令
 
-```
+```groovy
 ./gradlew clean
 ./gradlew assembleRelease //编译release版本
 
@@ -71,7 +72,7 @@ Could not generate a proxy class for BuildArtifactReportTask
 1. 生成签名文件
 2. gradle 签名 
 
- ```
+ ```groovy
  
     signingConfigs {
         signConfig {
@@ -101,7 +102,8 @@ rm -rf ./gradle.properties
 ### 移动库文件
 
 有些项目需要的底层库需要shell脚本移动
- ```
+
+```sh
 mkdir -p Android/app/libs/armeabi-v7a
 mkdir -p Android/app/libs/x86
 

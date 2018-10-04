@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "Android—push方案总结"
+subtitle:   "简述push的实现方案并讲解厂商push需要注意的case"
 date:       2018-08-28 14:18:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -18,26 +19,26 @@ tags:
 
 1. 长链接 
 
-长链接是为了 数据传输和推送。保证客户端和服务端一直处于通信状态。
+    长链接是为了 数据传输和推送。保证客户端和服务端一直处于通信状态。
 
-一种是app层的长链接，由apk自己维护，需要做进程保活断线重连等等。
+    一种是app层的长链接，由apk自己维护，需要做进程保活断线重连等等。
 
-一种是系统级长链接，该进程由系统维护，例如小米手机，则维护了小米推送的长链接。
+    一种是系统级长链接，该进程由系统维护，例如小米手机，则维护了小米推送的长链接。
 
-系统级别的长链接，收到push消息后有两种选择，一种是交给notifiaction处理，一种是下发至app处理，也就是透传和非透传。所以透传消息的到达率是低于非透传消息的。因为透传消息走的也是app级别的通道。
+    系统级别的长链接，收到push消息后有两种选择，一种是交给notifiaction处理，一种是下发至app处理，也就是透传和非透传。所以透传消息的到达率是低于非透传消息的。因为透传消息走的也是app级别的通道。
 
-小米推送华为推送等如果在其对应的手机上走的都是系统及长链接。而像个推，极光推送等走的都是app级别的长链接。在三方推送中，其提供的通知和透传消息走的都是app级通道。
+    小米推送华为推送等如果在其对应的手机上走的都是系统及长链接。而像个推，极光推送等走的都是app级别的长链接。在三方推送中，其提供的通知和透传消息走的都是app级通道。
 
 
 2. SMS信令推送
 
-服务器有新消息时，发送1条类似短信的信令给客户端，客户端通过拦截信令，解析消息内容 / 向服务器获取信息  此种方案基本可以理解为付费通道。
+    服务器有新消息时，发送1条类似短信的信令给客户端，客户端通过拦截信令，解析消息内容 / 向服务器获取信息  此种方案基本可以理解为付费通道。
 
 3. 轮询
 
-定时拉取服务器消息。
+    定时拉取服务器消息。
 
-心跳和轮询的区别，心跳是建立在已经有的链接上，轮训需要经历一次tcp+断开，3次握手4次挥手
+    心跳和轮询的区别，心跳是建立在已经有的链接上，轮训需要经历一次tcp+断开，3次握手4次挥手
 
 ## 长链接的实现
 
@@ -60,7 +61,7 @@ NIO同步非阻塞，BIO里用户最关心“我要读”，NIO里用户最关�
 NIO一个重要的特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作是同步阻塞的（消耗CPU但性能非常高）。
 
 
-```
+```java
   interface ChannelHandler{
       void channelReadable(Channel channel);
       void channelWritable(Channel channel);
@@ -121,7 +122,7 @@ service 进程后台进程 优先级位为 4 变为前台进程则为2
 
 需要签名文件生成的sh256key 填写到华为平台
 
-```
+```java
     private static OnConnectionFailedListener sConnectionFailedListener = new OnConnectionFailedListener() {
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -137,7 +138,7 @@ service 进程后台进程 优先级位为 4 变为前台进程则为2
 
 需要：
 
-```
+```java
     private static final String MIPUSH_APP_ID
     private static final String MIPUSH_APP_KEY 
     packagename 
@@ -158,7 +159,7 @@ service 进程后台进程 优先级位为 4 变为前台进程则为2
 需要注意服务器端使用的协议
 旧协议通知消息：
 
-```
+```json
 {
     "notification" : {
       "body" : "You have a new message",
@@ -171,7 +172,7 @@ service 进程后台进程 优先级位为 4 变为前台进程则为2
 ```
 旧协议透传消息：
 
-```
+```json
 {
     "data" : {
       "Nick" : "Obito",

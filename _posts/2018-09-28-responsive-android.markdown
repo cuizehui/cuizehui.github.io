@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "接口自动化测试(三)--动态代理"
+subtitle:   "通过自动测试，介绍aop实现和反射注入"
 date:       2018-09-28 21:56:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -32,15 +33,17 @@ AOPDemo:
 
 此方法实现的本质：反射生成一个新的接口对象，实现通过invoke执行原对象所有接口方法，在运行期,反射方法执行的前后插入自定义逻辑。
 
-```
-    //绑定委托对象，并返回代理类
-    public Object bind(Object tar) {
-        this.tar = tar;
-        //绑定该类实现的所有接口，取得代理类
-        return Proxy.newProxyInstance(tar.getClass().getClassLoader(),
-                tar.getClass().getInterfaces(),
-                this);
-    }
+
+```java
+//绑定委托对象，并返回代理类
+public Object bind(Object tar) {
+    this.tar = tar;
+    //绑定该类实现的所有接口，取得代理类
+    return Proxy.newProxyInstance(tar.getClass().getClassLoader(),
+            tar.getClass().getInterfaces(),
+            this);
+}
+
 ```
 
 **注意:**
@@ -52,7 +55,7 @@ AOPDemo:
 
 但在invoke中某些object对象转好只是地址值，因此做了args[i].getClass()特殊处理。
 
-```
+```java
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object result = null;

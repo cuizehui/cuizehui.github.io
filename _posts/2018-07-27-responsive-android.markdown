@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "Activity启动模式和近期任务卡"
+subtitle:   "记录解决启动模式和近期任务卡影响的bug"
 date:       2018-07-28 11:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"

@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "接口自动化测试(二)--socket模块"
+subtitle:   "介绍本次自动化测试中，网络模块的实现思路"
 date:       2018-09-26 12:56:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -36,7 +37,7 @@ tags:
 
 由于handler是队列管理，所以不存在消息顺序错乱等情况。
 
-```
+```java
  Runnable mWriteTask = new Runnable() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -60,7 +61,7 @@ tags:
     };
 ``` 
 
-```
+```java
 Runnable mReadTask = new Runnable() {
         @Override
         public void run() {
@@ -87,7 +88,7 @@ Runnable mReadTask = new Runnable() {
 
 工作线程：
 
-```
+```java
 Runnable mWorkTask = new Runnable() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -110,7 +111,7 @@ Runnable mWorkTask = new Runnable() {
   
 线程池：
 
-```
+```java
     public void startTask(Runnable myTask) {
         mExecutor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<Runnable>(5));
@@ -142,7 +143,7 @@ Runnable mWorkTask = new Runnable() {
 
 同样在发包时增加 /r/n 并替换所有数据包内/r/n为 空格
 
-```
+```java
 public class TcpUtils {
 
     private final int CONNECT_TIME_OUT = 30000;
