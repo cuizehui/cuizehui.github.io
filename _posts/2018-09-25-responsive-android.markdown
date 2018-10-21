@@ -48,12 +48,16 @@ tags:
             "string":"423424"
         },
         {
-            "string":"234234354"
+            "bool":"false"
+        },
+        {
+            "params":[{"key1":"value1"},{"key2":"value2"}]
         }
     ],
     "return":"bool"
 }
 ```
+- 需要处理 基本数据类型/map/特殊对象
 
 ### 参数列表解析处理
 
@@ -87,35 +91,51 @@ tags:
  **注意** 在转化class<?> 时做特殊处理。 这里是根据业务逻辑，获取了该获取的对象并返回。
    
 ```java
-    public Class<?> translateType(String key) {
-        Class<?> pramsType = null;
-        if (TextUtils.equals("bool", key)) {
-            pramsType = boolean.class;
-        } else if (TextUtils.equals("string", key)) {
-            pramsType = String.class;
-        } else if (TextUtils.equals("int", key)) {
-            pramsType = int.class;
-        } else if (TextUtils.equals("void", key)) {
-            pramsType = void.class;
-        } else if (TextUtils.equals("List", key)) {
-            pramsType = List.class;
-        } else if (TextUtils.equals("Bool", key)) {
-            pramsType = Boolean.class;
-        } else if (TextUtils.equals("callitem", key)) {
-            pramsType = com.juphoon.cloud.JCCallItem.class;
-        }
-        return pramsType;
+public Class<?> translateType(String key) {
+    Class<?> pramsType = null;
+    if (TextUtils.equals("bool", key)) {
+        pramsType = boolean.class;
+    } else if (TextUtils.equals("string", key)) {
+        pramsType = String.class;
+    } else if (TextUtils.equals("int", key)) {
+        pramsType = int.class;
+    } else if (TextUtils.equals("void", key)) {
+        pramsType = void.class;
+    } else if (TextUtils.equals("List", key)) {
+        pramsType = List.class;
+    } else if (TextUtils.equals("Bool", key)) {
+        pramsType = Boolean.class;
+    } else if (TextUtils.equals("callitem", key)) {
+        pramsType = com.juphoon.cloud.JCCallItem.class;
+    } else if (TextUtils.equals("map", key)) {
+        pramsType = Map.class;
     }
+    return pramsType;
+}
 
-    //处理特殊类型对象
-    public Object translateParam(Class<?> type, Object value) {
-        if (type == com.juphoon.cloud.JCCallItem.class) {
-            List<JCCallItem> items = JCManager.getInstance().call.getCallItems();
-            JCCallItem item = items.get(0);
-            return item;
+//处理特殊类型对象/map等
+ public Object translateParam(Class<?> type, Object value) throws JSONException {
+    if (type == com.juphoon.cloud.JCCallItem.class) {
+    	 //根据具体的业务逻辑，测试数据，获取所需对象。
+        List<JCCallItem> items = JCManager.getInstance().call.getCallItems();
+        JCCallItem item = items.get(0);
+        return item;
+    } else if (type == Map.class) {
+        JSONArray mapArray = new JSONArray(value.toString());
+        HashMap<String, String> parmMap =  new HashMap<>();
+        for (int i = 0; i < mapArray.length(); i++) {
+            JSONObject pram = new JSONObject(mapArray.get(i).toString());
+            Iterator<String> sIterator = pram.keys();
+            //假定范型内容为String,String
+            while (sIterator.hasNext()) {
+                String key = sIterator.next();
+                parmMap.put(key, pram.get(key).toString());
+            }
         }
-        return value;
+        return parmMap;
     }
+    return value;
+}
 ```
 
 ## 反射模块
@@ -224,19 +244,19 @@ tags:
     **getfield public field ，getDeclaredFields  与访问权限无关**
     
     ```java
-        /**
-        *	className 类名
-        * 	fieldName 成员变量名
-        *
-        **/
-        
-        public static   Field  refField(String className, String FieldName) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-            Class<?> cls = Class.forName(className);
-            Field field = cls.getDeclaredField(FieldName);
-            field.setAccessible(true);
-            Class<?> type = field.getType();
-            return  field;
-        }
+    /**
+    *	className 类名
+    * 	fieldName 成员变量名
+    *
+    **/
+    
+    public static   Field  refField(String className, String FieldName) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        Class<?> cls = Class.forName(className);
+        Field field = cls.getDeclaredField(FieldName);
+        field.setAccessible(true);
+        Class<?> type = field.getType();
+        return  field;
+    }
     
     ```
 
@@ -273,11 +293,11 @@ public <T> T method(Class<T> T){
 不定长参数可以传递数组：
 
 ```java 
-      @CallerSensitive
-    public Method getMethod(String name, Class<?>... parameterTypes)
-        throws NoSuchMethodException, SecurityException {
-        return getMethod(name, parameterTypes, true);
-    }
+  @CallerSensitive
+public Method getMethod(String name, Class<?>... parameterTypes)
+    throws NoSuchMethodException, SecurityException {
+    return getMethod(name, parameterTypes, true);
+}
 ```
       
 ## 参考文章

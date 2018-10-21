@@ -112,11 +112,11 @@ Runnable mWorkTask = new Runnable() {
 线程池：
 
 ```java
-    public void startTask(Runnable myTask) {
-        mExecutor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<Runnable>(5));
-        mExecutor.execute(myTask);
-    }
+public void startTask(Runnable myTask) {
+    mExecutor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
+            new ArrayBlockingQueue<Runnable>(5));
+    mExecutor.execute(myTask);
+}
 ```  
 ### 判读连接是否断开
  

@@ -56,32 +56,37 @@ public Object bind(Object tar) {
 但在invoke中某些object对象转好只是地址值，因此做了args[i].getClass()特殊处理。
 
 ```java
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Object result = null;
-        String resultJson = makeResultJson(method.getName(), args);
+@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    Object result = null;
+    String resultJson = makeResultJson(method.getName(), args);
 
-        method.getParameterTypes();
+    method.getParameterTypes();
 
-        result = method.invoke(tar, args);
-        sendResult(resultJson);
-        return result;
-    }
+    result = method.invoke(tar, args);
+    sendResult(resultJson);
+    return result;
+}
 
-    @Override
+@Override
     public String makeResultJson(String method, Object[] args) {
         JSONObject resultJson = new JSONObject();
-        //此处做处理类型判断处理
+        //此处做处理类型判断处理，特殊类型转json 采用Gson
         try {
             resultJson.put("type", "callback");
             resultJson.put("method", method);
             Gson gson = new Gson();
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].getClass() == com.xxxx.JCCallItem.class) {
-                    JCCallItem jcCallItem = (JCCallItem) args[i];
-                    resultJson.put("arg" + i, gson.toJson(jcCallItem));
-                } else {
-                    resultJson.put("arg" + i, args[i]);
+            //无参方法
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    Log.d("class type:", args[i].getClass().toString() + ".");
+                    if (args[i].getClass() == com.juphoon.cloud.JCCallItem.class) {
+                        JCCallItem jcCallItem = (JCCallItem) args[i];
+                        resultJson.put("arg" + i, gson.toJson(jcCallItem));
+                    }
+                    else {
+                        resultJson.put("arg" + i, args[i]);
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -91,14 +96,14 @@ public Object bind(Object tar) {
         return resultJson.toString();
     }
 
-    @Override
-    public boolean sendResult(String resultJson) {
-        if (resultJson == null) {
-            return false;
-        }
-        EventBus.getDefault().post(new JCTestEvent(resultJson));
-        return true;
+@Override
+public boolean sendResult(String resultJson) {
+    if (resultJson == null) {
+        return false;
     }
+    EventBus.getDefault().post(new JCTestEvent(resultJson));
+    return true;
+}
 ```
 ---
 
