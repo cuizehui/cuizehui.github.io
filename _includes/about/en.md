@@ -12,8 +12,8 @@
  - 崔泽辉/男/1994 
  - **本科/华东交通大学** 物联网工程系 
  - 工作年限：**2年**
- - 技术博客：[http://blog.cuizehui.github.io](http://blog.cuizehui.github.io) 
- - CSDN博客：[http://blog.csdn.net/cuizehui123](http://blog.cuizehui.github.io)
+ - 技术博客：[http://cuizehui.github.io](http://cuizehui.github.io) 
+ - CSDN博客：[http://blog.csdn.net/cuizehui123](https://blog.csdn.net/cuizehui123)
  - GitHub：[https://github.com/cuizehui](http://blog.cuizehui.github.io)
 
  - 期望职位：Android开发工程师
@@ -21,46 +21,52 @@
 
 ---
 
+# 个人技能简介
+
+- 熟悉Mac/ubuntu系统下的日常操作
+- 熟悉Git,熟练掌握souceTree使用，有良好的代码规范和提交规范。熟悉gerrit+jenkins平台
+- Java基础良好，掌握java的常用设计模式：单例、享元、工厂，原型，动态代理等，能设计并使用mvc/mvp框架进行开发
+- Android基础良好，对AndroidSDK(即时通讯SDK)开发有相关经验，对Binder进程间通信有过开发经验
+- 能够编写Python脚本，对JavaSdk接口自动化测试有搭建经验
+- 有过基于vue+AgentWeb框架的Hybrid-App开发经验
+- 做过MTK平台的FrameWork层系统维护,有较强的debug能力。
+
 # 工作经历
 
 ## Juphoon （ 2018年4月 ~ 至今 ）
 
 ### 主要工作内容和技能点
 
-维护公有云音视频能力sdk(类似中间件，将底层c native接口能力，包装成Android能力组件)
-基于此套sdk完成一些产品并完善sdk组件功能。例如push模块。有良好的代码规范和提交规范。有一定基础的架构能力。
+维护音视频能力sdk(即时通讯SDK)，并基于此sdk做一些定制开发和白牌软件
+工作期间主要参与如下几个工作
 
-- 熟悉Mac系统下的日常操作。能够阅读翻译ios端的逻辑代码。
-- souceTree工具,android studio断点调试，jenkins自动编译流程.
-- 对自定义view、大图片加载，动画，下拉刷新、oauth2.0登陆等功能有过开发经验。
-- 掌握AIDL进程间通信方式。熟悉底层binder机制并做过相关开发
-- 对EventBus、butterknife、retrofit等框架有熟练的使用经验，Dagger2等有所了解，并对其中部分框架有过源码的阅读
-- 掌握java的常用设计模式：单例、享元、工厂，原型等，能设计并使用mvc/mvp框架进行开发
-- 对web开发有所了解。有webView(AgentWeb)+H5(vue框架)开发的Hybrid-app开发经验
-- 掌握handler+theard的等异步通信方式，并阅读了解其源码。
-- 熟练掌握RecyclerView等基本UI控件的使用，并对控件有学习能力。
+
 - 对gradle构建工具的构建过程和细节有所研究
-- 对jni有所了解。
 
-### 参与项目
 #### jcsdk
 
- Android消息推送框架
+- 熟悉Mac系统下的日常操作。能够阅读翻译ios端的逻辑代码。
+- 集成Push模块（binder+sdk层）
+- 掌握AIDL进程间通信方式。熟悉底层binder机制并做过相关开发
+- 集成对方网络
+- 涂鸦问题
 
 #### 移动视频营业厅
 
-会议聊天 im聊天 分屏功能  内存泄漏调试 自动编译
+- 视频营业厅 （界面绘制EventBus+retrofit+oauth2.0+分屏需求） realm
+- 对自定义view、大图片加载，动画，下拉刷新、oauth2.0登陆等功能有过开发经验。
 
 #### coachTalk
 
+- CoachTalk (agentWeb + 下拉刷新+ vue+ FCM+ calender) 内存泄漏 link 路由框架设计
+- 对EventBus、butterknife、retrofit等框架有熟练的使用经验，Dagger2等有所了解，并对其中部分框架有过源码的阅读
 agentweb框架，给h5提供登陆能力和通话能力。基于agentWeb框架开发，通话基于sdk一对一通话能力。push 能力集成，日历提醒功能集成
 
-相关功能技术博客：
+#### SDK接口自动化测试
 
+- 搭建自动化测试（python+动态代理+反射+socket+json）
+- 掌握handler+theard的等异步通信方式，并阅读了解其源码。
 
-#### feture 
-
-自动化测试 自动编译，jenkis,路由框架设计，rxjava/mvvm/mvp realm
 ## 宁波麦博韦尔移动电话有限公司 （ 2017年3月 ~ 2018年4月 ）
 
 ### 工作内容和技能
@@ -72,7 +78,6 @@ agentweb框架，给h5提供登陆能力和通话能力。基于agentWeb框架�
 - 熟悉Ubutu系统下的日常开发，有linux环境开发经验,对shell脚本有一定了解。
 - 熟悉android_FrameWork层开发，有Debug能力，对代码追踪和问题定位有经验。
 - 掌握源码查看的能力，对log有一定的分析能力。
-- 掌握git代码管理工具的使用。
 - 对点击事件的流程keydown事件的流程有过分析
 - 有MTK平台的开发经验
 
@@ -87,7 +92,6 @@ agentweb框架，给h5提供登陆能力和通话能力。基于agentWeb框架�
 
 ### safircom项目 
 在此项目中负责MMI层的开发工作，完成客户的客制化和需求的移植。修改Modem项，预置APK，修改并通过google认证，修改Framwork层出现的BUG。在此项目中学习了手机系统软件的开发流程。掌握modem编译方式。提高了文档阅读能力。对项目进度和管理沟通，有了深刻的认识。
- 
 
 # 开源项目和作品
 
