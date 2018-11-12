@@ -37,13 +37,82 @@ tags:
 
 jenkinsfile
 
+pipeline出现，它就是jenkins部署的代码方式，它使用groovy脚本编写，有了它，就不用使用jenkins向导了，有了它，你的jenkins变更就可以追踪了（因为它的文件可以放在git,svn上）。
+
+
 ```
         extensions: [
         [$class: 'CleanBeforeCheckout']
        ],
 ```
-                 
-pipeline出现，它就是jenkins部署的代码方式，它使用groovy脚本编写，有了它，就不用使用jenkins向导了，有了它，你的jenkins变更就可以追踪了（因为它的文件可以放在git,svn上）。
+        
+```shell
+pipeline {
+    agent {
+        node {
+            //设置标签
+            label 'android'
+        }
+    }
+
+    stages {
+        # gerrit 拉代码 切分支
+        stage('Checkout Code') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '$GERRIT_REFSPEC']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [
+                        [$class: 'CleanBeforeCheckout']
+                    ],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'ssh://jenkins@地址#Gerrit项目路径#', refspec: '$GERRIT_REFSPEC:$GERRIT_REFSPEC']]
+                ])
+            }
+        }
+        # jenkis 复制sdk库依赖
+        stage('Copy SDK') {
+            steps {  
+                sh "rm -rf shared"
+                copyArtifacts \
+                    filter: 'jenkis生成依赖库的路径', \
+                    fingerprintArtifacts: true, \
+                    projectName: 'jenkis工程名', \
+                    selector: specific('构建版本号')
+            }
+        }
+        # 执行编译脚本
+        stage('Build') {
+            steps {
+                sh 'chmod 777 ./build.sh'
+                sh './build.sh \"$GERRIT_CHANGE_SUBJECT\"'
+                script {
+                    echo env.GERRIT_CHANGE_SUBJECT
+                    if (env.GERRIT_CHANGE_SUBJECT.contains("version:")) {
+                        currentBuild.displayName = env.GERRIT_CHANGE_SUBJECT.substring("version:".length()).trim()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            # 构建成品的copy路径
+            archiveArtifacts artifacts: 'out/**', fingerprint: true
+        }
+    }
+}
+
+```        
+上述代码主要完成以下流程：
+
+1. 拉代码切分支
+2. jenkis copy 库依赖
+3. 执行编译脚本（后面会讲到）
+4. 构建成品打包          
+
 
 ## gradle 编译
 
@@ -122,7 +191,7 @@ cd Android
 ```
 if [[ "$1" == version:* ]];then
 	
-	sed -i 's/\"appkey"/输入AppKey/g' ./app/src/main/java/com/juphoon/vccclient/VccConstants.java
+	sed -i 's/\"appkey"/输入AppKey/g' ./app/有key的Java文件.java
 	
 	tar -zcvf ./out/CallCenter-Android.tar.gz  --exclude=./app/build --exclude=./app/gradle.properties  ./app  build.gradle gradle.properties settings.gradle ./gradle gradlew gradlew.bat
 fi
