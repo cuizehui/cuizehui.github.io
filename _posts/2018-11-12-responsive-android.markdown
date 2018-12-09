@@ -1,8 +1,8 @@
 ---
 layout:     post
 title:      "MVP模式APP开发-总结"
-subtitle:   "通过Gradle将工程依赖，sdk,jar等文件分包"
-date:       2018-11-06 22:56:00
+subtitle:   "介绍MVP模式下APP开发的一些细节和心得"
+date:       2018-12-01 22:56:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
@@ -11,8 +11,17 @@ tags:
 
 ## 简介
 
-本文介绍了，工程目录结构的拆分，工具类拆分module,mvp模式下，BaseActivity的抽取.提供了fragment和Activity通信的特殊思路。
-简述了，在Mvp下RecyclerView更好的分离。最后讲了全局handler 更新UI的方式。
+工程的解耦合主要有两个方向
+
+- 横向：模块化
+- 纵向：分层
+
+本文通过Demo总结并思考我这段时间MvpAPP开发的一些心得,主要介绍以下内容:
+
+1. 工程目录结构的拆分，工具类拆分module
+2. mvp模式下，BaseActivity的抽取.提供了fragment和Activity通信的特殊思路。
+3. Mvp下Adapter处理
+4. 最后讲了全局handler 更新UI的方式。
 
 ## Demo项目地址
 
@@ -238,11 +247,11 @@ appdata.java
 
 ### ActivityTools
 
-1. 弹dialog
-2. 显示fragment
-3. progressbar 
+1. 封装Fragment显示隐藏移除添加
+2. 封装显示dialog
 
-### toolbar处理
+[ActivityTools](https://github.com/cuizehui/MVP_App_Frame/blob/master/tool/src/main/java/cn/nela/tools/ActivityTool.java)
+
 
 ## 参考文章
 
