@@ -171,158 +171,84 @@ tags:
 now: 
 
 1. 项目 
-    - 智慧新闻 
-    - 商城
-    - AgentWeb混合开发
-   
 
-    
-2. 掌握基本框架使用
-     
+    - AgentWeb混合开发CoachTalk
+    - 视频客服
+    - QTalk Mvp框架
+    - JC SDK push模块
+      
+2. 开源框架
+  
      - EventBus  
-     - butterknife 
-     - retrofit2
-     - smartRefresh
+     - Butterknife 
+     - Retrofit2
+     - Realm
      - agentWeb
+     - Glide 
+     - SmartRefresh
      - Dagger2 
-     - glide
-    
-3. MVP MVC 可以使用
-
-4. 网络框架retrofit
-   
-5. 了解apk 的发布流程 和其中的过程
-   
-   		
-       - 混淆
-       - gradle
-       - 签名
-       - 反编译
-       - crash
-       - jni开发
-   
-
-6. 细节
-    
-     - 几种回调方式 引用的复习和使用      
-     - Fragment Rectley 等控件的回调使用
-     - User全局变量的控制流程
-     - 布局的调试方式DDMS 截屏
-     - AIDL 跨进程通信 传输序列化对象！
-     - binder ipc 通信
-        
-future:
-
-- 尝试框架集成使用Rxjava+Retorfit
-- 内存泄露性能优化相关工具使用
-        
-        1.数据库框架
-        2.路由总线框架搭建
-        3.sharePrafecne轻量框架
- 		
-### android 基础题目待办列表 ###
-1. android base   70%
-
-
-## android framework ## 
-
-now:
-
-1.内容 
-     
-- 超级省电
-- notification  从产生开始到销毁结束
-- 宏控 和脚本的执行流程  如何自定义宏控
-
-future:
-        
- - phonewindowmanager  按键 事件 
- - prefrence  如何保存 并绘制 永久带数据库的视图
-
- -  package-app-systemUI
- -  activity 启动过程
-
-			1.Zygote+
-			2.systemservice
-			3.AMS
-			4.PMS
-			5.应用程序启动过程
-
-			8月：bindler ipc+4大组件启动模式+消息处理机制looper
-
-## Android SDK ##
-
-1. 接口规范
-2. doodle 自定义view
-3. push 流程
-4. ipc binder
-
- f
-
-
-## web ##
-
-now: 
-  
-1. 项目
-  
-	- 考试系统 
-
-2. 流程
-
-     - 了解后端和前端如何联系，后端是如何实现和搭建的做过简单的Demo
-
-3. 自建blog
-
-4. 基础知识
-
-		- servlet
-		- jsp
-		- eL表达式
-		- 表单数据使用
-		- 隐式对象
-		- 使用代码片段
-		- js
-		- html
-		- css
-		
-
-future:
-
-		1.es6
-		2.vue
+           
+3. 提交规范和打包和持续集成
 	
+	- Jenkins
+	- Git (SourceTree)
+	- Gerrit Code
+	- Gradle
+	
+4. Java 
+  
+    - 反射
+    - 正则
+    - socket   
+    
+5. Android 
 
-## tools ##
-now: 
+   - Binder ipc
    
+6. others
+
+   python-html 自动化测试
+	
+## tools ##
+
+now: 
+  
  - mac os
  - ubuntu
  - windows
+ - pycharm
  - android studio 
- - eclipse
- - adb
- - shell 
- - npm
-  
+ - markdown
+ - sourceTree
+ - Xcode
+ 
 future:
    
-- linux 命令
-- vim
-- jenkis 自动编译，持续集成
+## Demo待办需求
 
-
+1. 添加Setting 界面
+2. 添加realm框架
+  
 ##  Want to do ##
 
-1. vue
-2. 逆向工程
-3. python
-4. shell 
+1. Java  Aop /socket BIO 
+2. python 40%（爬虫）自动化测试路线
+4. ios项目翻译语法等  
+
+2019-4
+
+4. Android surfaceView MVP 架构App完善 rxJava使用
+. 内存泄露性能优化相关工具使用
+6. 逆向工程 其他路线
+
+2019-8
+
+## other 
+        
+  1.路由总线框架搭建
 
 ## work experience ##
-1.  宁波萨瑞通信
-2.  江西时空电子
-3.  juphoon
+
     
 ## link ## 
 
