@@ -34,7 +34,7 @@ tags:
 
 时序图如下：
 
-![simple pic](https://github.com/cuizehui/cuizehui.github.io/blob/master/img/conversation.png)
+![conversation](/img/in-post/conversation.png)
 
 ### Conversation的初始化
 
@@ -89,7 +89,7 @@ step4. ComposeMessageActivity.startMsgListQuery()
 
 时序图如下： 
 
-![simple pic](https://github.com/cuizehui/cuizehui.github.io/blob/master/img/message.png)
+![message](/img/in-post/message.png)
 
 **ComposeActivity**
 launchMode为singleTask的时候，通过Intent跳到一个Activity,如果系统已经存在一个实例，系统就会将请求发送到这个实例上，但这个时候----------系统就不会再调用onCreate方法，而是调用onNewIntent方法。

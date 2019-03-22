@@ -1,0 +1,31 @@
+@startuml
+title 消息加载顺序
+'自增长序号
+autonumber
+
+ComposeMessageActivity -> MessageListAdapter :initMessageList \n 初始化MessageListAdapter
+
+'activate ComposeMessageActivity
+
+ComposeMessageActivity -> ComposeMessageActivity : onStart
+ComposeMessageActivity -> ComposeMessageActivity : LoadMessageContent
+ComposeMessageActivity -> mBackgroundQueryHandler : startMsgListQuery()
+
+'destroy ComposeMessageActivity
+
+
+mBackgroundQueryHandler -> mBackgroundQueryHandler: startQuery
+mBackgroundQueryHandler -> mBackgroundQueryHandler : onQueryComplete()
+mBackgroundQueryHandler -> MessageListAdapter : changeCursor(cursor)
+
+== 消息列表渲染流程 ==
+
+MessageListAdapter -> MessageListAdapter: getItemViewType
+MessageListAdapter -> MessageListAdapter: newView()
+MessageListAdapter -> MessageListItem: bindView()
+MessageListItem ->MessageItem: bind(messageItem ); \n 将MessageItem渲染到MessageListItem
+MessageItem -> MessageItem : getCachedMessageItem(type, msgId, cursor);  \n 将cursor包装成MessageItem
+
+'footer Page %page% of %lastpage%
+
+@enduml
