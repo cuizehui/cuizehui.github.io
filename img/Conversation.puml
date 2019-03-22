@@ -1,0 +1,17 @@
+@startuml
+title Conversation加载流程
+
+autonumber
+ConversationList->Conversation: startAsyncQuery();
+Conversation-> AsyncQueryHandler : startQueryForAll(mQueryHandler, THREAD_LIST_QUERY_TOKEN);
+AsyncQueryHandler ->> AsyncQueryHandler  : startQuery(token, null, uri,ALL_THREADS_VIEW_PROJECTION, \n  sqlCon,  null, RmsDefine.Threads.PRIORITY_ORDER);
+
+AsyncQueryHandler -> AsyncQueryHandler :onQueryComplete();
+Conversation ->Conversation: from(this, cursor); \n 从Cursor中映射Conversationd对象
+
+
+AsyncQueryHandler --> ConversationList :  updateListContent(final boolean empty, Cursor cursor)
+ConversationList -> ConversationListAdapter : changeCursor
+ConversationListAdapter -> ConversationListItem: onBindView()
+
+@enduml
