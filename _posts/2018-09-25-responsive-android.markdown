@@ -162,6 +162,13 @@ public Class<?> translateType(String key) {
    	jcManager.getClass().newInstance();
 ```
 
+3. 通过对象获取类
+
+```java
+  Class<?> object = obj.getClass();
+
+```
+
 ### 调用方法
 
 1. 调用静态方法
@@ -249,7 +256,7 @@ public Class<?> translateType(String key) {
     * 	fieldName 成员变量名
     *
     **/
-    
+    //获取类成员
     public static   Field  refField(String className, String FieldName) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         Class<?> cls = Class.forName(className);
         Field field = cls.getDeclaredField(FieldName);
@@ -258,6 +265,18 @@ public Class<?> translateType(String key) {
         return  field;
     }
     
+    ```
+    
+    //反射获取对象内成员变量    
+    ```java
+    public static  void refField(Object obj, String FieldName) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        Class<?> cls = obj.getClass();
+        Field field = cls.getDeclaredField(FieldName);
+        field.setAccessible(true);
+        Class<?> type = field.getType();
+        field.get(obj);
+    }
+
     ```
 
 4. 将成员转化成实例对象

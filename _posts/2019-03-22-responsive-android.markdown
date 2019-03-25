@@ -65,7 +65,7 @@ ConversationListAdapter中只实现了bindView和newView这两个函数，此外
 6. mMsgListAdapter.changeCursor(cursor) //更新Adapter数据
 ```
 
- ### 消息列表数据更新流程
+### 消息列表数据更新流程
  
 数据库改变触发更新,ContentObserver触发
 
