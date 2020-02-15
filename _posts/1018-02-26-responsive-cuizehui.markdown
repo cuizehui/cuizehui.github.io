@@ -2,7 +2,7 @@
 layout:     post
 title:      "2018年终总结"
 subtitle:   "2018年终总结"
-date:       2019-02-26 20:50:00
+date:       1019-02-26 20:50:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
