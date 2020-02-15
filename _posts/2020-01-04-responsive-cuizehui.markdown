@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "终端组最佳团队奖评选最佳团队奖"
-subtitle:   "评选材料"
+title:      "评选材料"
+subtitle:   "Rcs终端组和个人评选材料"
 date:       2020-01-04 23:50:00
 author:     "Nela  IMS终端组"
 header-img: "img/post-bg-rwd.jpg"
