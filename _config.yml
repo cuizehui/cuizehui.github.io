@@ -91,8 +91,13 @@ service-worker: true
 # Friends
 friends: [
     {
-
-        title: "huangxuan",
-        href: "http://huangxuan.me"
+      title: "huangxuan",
+      href: "http://huangxuan.me"
+    },{
+      title: "美团",
+      href: "http://tech.meituan.com/"
+    },{
+      title: "wansho",
+      href: "http://gitbook.wansho.cn"
     }
 ]
