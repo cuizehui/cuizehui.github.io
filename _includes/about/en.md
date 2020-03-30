@@ -45,8 +45,7 @@
        |组件化     | 按照业务划分模块，将不同功能组件化，例如鉴权登陆模块、文件传输、群聊消息模块，一对一消息收发模块|
        |Gradle操作 | SO加载JNI配置，gradle操作jar包，**flavor**多分支多渠道打包方式，aar打包|
        |设计模式   | Mms短信代码结构**mvc**模式,Messaging短信代码结构为**Mvp**模式 |
-       |界面相关    | 编辑模式下搜索，短信RCS模式切换等 ActionMode+Toolbar|
-       |定时操作    |JobService 实现定时登陆操作 、埋点功能实现，数据上传 |
+       |定时操作    |JobScheduler +IntentService 实现定时登陆操作 、埋点功能实现，数据上传 |
      
    - 对接的厂商项目
    
@@ -64,13 +63,13 @@ SDK介绍：
     
    - 完成的模块
      
-     多方通话涂鸦功能，三方推送方案实现,客户需求支持,多方通话网络状态,查询用户状态,录制分辨率调整等
+     多方通话涂鸦功能，三方推送方案实现,多方通话网络状态,查询用户状态,录制分辨率调整等,完成iOS端和windows端代码翻译同步任务。
         
    - 涉及的技术点
       
       |技术点| 实现方式|
       |-----|--------------------------------------------------------------------|
-      |项目结构|接口化jar包+jni接口|
+      |项目结构|接口化生成jar包+jni调用媒体库|
       |异步操作方式|Handler+Thread、AsyncTask|
       |开源框架| AgentWeb、Butterknife、Glade、SmartRefresh、EventBus框架、Retrofit2、Realm|
       |界面 | ViewPager+fragment、自定义View、RecyclerView、Activity|
