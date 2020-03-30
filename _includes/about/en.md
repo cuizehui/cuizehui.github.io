@@ -34,7 +34,7 @@
     
    - 完成的模块
    
-    商家发现，搜索功能、文件传输，卡片消息展示，公众账号查询，详情，消息（地理位置，图片语音）收发功能、群聊功能、群发功能等
+     商家发现，搜索功能、文件传输，卡片消息展示，公众账号查询，详情，消息（地理位置，图片语音）收发功能、群聊功能、群发功能等
     
    - 涉及的技术点
    
@@ -63,7 +63,7 @@ SDK介绍：
     
    - 完成的模块
      
-     多方通话涂鸦功能，三方推送方案实现,多方通话网络状态,查询用户状态,录制分辨率调整等,完成iOS端和windows端代码翻译同步任务。
+     多方通话涂鸦功能修改，三方推送方案实现,多方通话网络状态,查询用户状态,录制分辨率调整等,完成iOS端和windows端代码翻译同步任务。
         
    - 涉及的技术点
       
@@ -112,11 +112,13 @@ SDK介绍：
 
 ## 开源项目
 
+ - [服务进程框架方案](https://github.com/cuizehui/ServiceAPK) 使用跨进程通信方式提供服务的框架原型
  - [MVP_App_Frame](https://github.com/cuizehui/MVP_App_Frame)  基于Mvp开发的App-包含常用模块的处理细节和工具类等
  - [BinderPushApk](https://github.com/cuizehui/PushAPK-Binder)  Binder通信实现小米推送apk
  - [SDK自动化测试方案](https://github.com/cuizehui/JCInterFaceTestClient)
  
 ## 相关技术文章
+
 
 - [MMS短信源码-重要功能分析](https://cuizehui.github.io/2019/03/22/responsive-android/)
 
