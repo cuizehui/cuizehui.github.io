@@ -2,7 +2,7 @@
 layout:     post
 title:      "JNI与NDK整理"
 subtitle:   "JNI-SO库生成集成开发流程"
-date:       2019-03-30 14:50:00
+date:       2020-03-30 14:50:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
