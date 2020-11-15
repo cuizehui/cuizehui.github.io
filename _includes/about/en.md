@@ -17,7 +17,7 @@
 - 有Android framework 开发经验（2年）原生短信（MMS & Messaging）源码开发的经验
 - 熟悉Git分支操作,熟练掌握AndroidStudio使用,熟悉Gerrit+Jenkins平台,熟悉Gradle基本操作
 - 熟练掌握Mac/Ubuntu/Windows系统下的开发操作
-- 有良好的代码规范,命名规范
+- 有良好的代码规范,命名规范，接口文档规范，并能够熟练使用MarkDown
 - Java基础基础良好,掌握正则,Socket,反射等技巧。掌握常用设计模式：单例、享元、工厂，原型，动态代理等,能设计并使用mvc/mvp框架进行开发
 - Android基础良好,能够完成大多数界面开发,并快速学习UI控件使用,对Binder进程间通信有过开发经验
 - 能够编写简单Python脚本，对JavaSDK接口自动化测试有搭建经验
