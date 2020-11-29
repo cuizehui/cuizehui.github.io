@@ -136,7 +136,7 @@ public class RmsProvider extends ContentProvider {
 
 ### 进程2通过fd获取文件
 
-```
+```Java
      FileDescriptor fileDescriptor = RcsMmsInitHelper.getContext().getContentResolver().openFileDescriptor(uri, "r").getFileDescriptor();
           
           
@@ -213,7 +213,7 @@ public class RmsProvider extends ContentProvider {
 
 targetAPI升级至30无法读取其他进程ContentProvider需要在AndroidManifest增加以下代码
 
-```
+```xml
     <queries>
         <package android:name="包名" />
     </queries>
