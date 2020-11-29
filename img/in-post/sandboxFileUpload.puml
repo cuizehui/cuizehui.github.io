@@ -1,0 +1,29 @@
+@startuml
+title RCSService上传文件逻辑
+start
+	group messaging
+	:调用rcsUploadHttpFile上传文件;
+	note right:原先接口
+	end group
+	if(是否是沙盒版本) then (是)
+
+	if(判断文件是否存在)then (否)
+		:使用线程池拷贝Uri到PathB;
+ 		note right:参数中携带A进程uri可通过此Uri获取文件FD\n PathB是对传递下来的Path和cookie进行编码生成的路径，\n对PathB进行解码可以重新获取入参的Path \n根据FD和PathB复制文件;
+  else(是)
+	endif
+  :调用SDK接口进行上传文件;
+	if(调用上传接口是否成功) then (yes)
+	        :等待SDK上传结果回调;
+    	    if(上传成功)then(yes)
+					:回调中获取PathB等信息;
+    	    :根据PathB删除文件;
+    	    :构造发送成功广播通知Messaging;
+    	    else(no)
+    	    :构造失败广播通知Messaging;
+    	    endif
+    else(no)
+    	:构造失败广播通知Messaging;
+    endif
+stop
+@endu

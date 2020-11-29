@@ -1,0 +1,44 @@
+@startuml
+title 文件下载流程
+start
+	group Messaging
+    :调用进程1下载接口;
+    note right:入参不变，含path
+    end group
+    :调用进程2下载接口;
+    note left: AIDL调用;
+	if(是否开启沙盒) then (开启)
+	:将path转换为进程2私有路径pathA;
+	note right:pathA:是对原path进行编码生成,编码规则为(Cookie+文件名)base64加密+文件后缀
+	else(未开启)
+	endif
+	if(进程2下载接口是否成功) then (yes)
+    else(no)
+    	:上报接口调用失败;
+    	end
+  endif
+:等待进程2下载回调;
+if(下载是否成功) then (yes)
+if(是否开启沙盒) then (开启)
+    :将下载路径转化为Uri,进程1可通过此Uri获取文件FD;
+    :将PathB转换为Path;
+    :上报给进程1下载成功事件;
+	note right:广播上报
+	group 进程1
+    :复制文件到私有目录;
+    :使用Uri删除在进程2的原文件;
+    endgroup
+	else(未开启)
+	 :上报进程1下载成功事件;
+     note right:广播上报
+     group 进程1
+         :原方案形式处理;
+         endgroup
+	endif
+
+else (no)
+:上报进程1下载失败事件;
+note right:广播上报
+endif
+stop
+@endu
