@@ -134,6 +134,13 @@ public class RmsProvider extends ContentProvider {
 
 ```
 
+### 构建uri
+
+```java
+    public static final Uri CONTENT_URI_PATH = Uri.parse("content://rms/rms_log_file");
+    RmsDefine.Rms.CONTENT_URI_PATH.buildUpon().appendPath(MtcImFthttp.Mtc_ImFtHttpGetName(dwFtHttpId)).build().toString());
+```
+
 ### 进程2通过fd获取文件
 
 ```Java

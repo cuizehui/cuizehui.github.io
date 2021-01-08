@@ -29,7 +29,7 @@ tags:
 反编译命令
 
 ```
-apktool d xxx.apk 
+java -jar apktool.jar d xxx.apk 
 ```
 
 
@@ -45,6 +45,7 @@ apktool d xxx.apk
 ```
 
 - 将生成的jar包丢进打开的JD-GUI工具中
+https://blog.csdn.net/yanzi1225627/article/details/48215549
 
 ### 源码情况
 
