@@ -1,0 +1,41 @@
+@startuml
+title 文件下载流程
+start
+	group Messaging
+	:选择文件;
+	if(是否开启沙盒) then (开启)
+	:调用MiRcs拷贝接口;
+	:将path转换为MiRcs私有路径transPath;
+	note right:transPath:是对原path进行编码生成,编码规则为(Cookie+文件名)base64加密+文件后缀
+	else(未开启)
+	:将文件拷贝到SDcard;
+	endif
+	:调用Messaging下载接口;
+    note right:入参不变，含path
+    end group
+    :调用MiRcs下载接口;
+	if(MiRcs下载接口是否成功) then (yes)
+    else(no)
+    	:上报接口调用失败;
+    	end
+  endif
+:等待MiRcs下载回调;
+if(下载是否成功) then (yes)
+if(是否开启沙盒) then (开启)
+    :消息入库存储文件路径为transPath;
+    :上报给Messaging下载成功事件;
+    group Messaging
+    :Messaging可通过此transPath获取文件FD并展示;
+    endgroup
+	else(未开启)
+	 :上报Messeging下载成功事件;
+     group Messaging
+         :原方案形式处理;
+         endgroup
+	endif
+
+else (no)
+:上报Messaging下载失败事件;
+endif
+stop
+@endu

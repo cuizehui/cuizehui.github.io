@@ -1,0 +1,37 @@
+@startuml
+title 小米沙盒文件上传逻辑
+start
+	group messaging
+	if(是否是沙盒版本) then (是)
+        if(判断此文件MiRcs是否存在)then (否)
+            :生成要拷贝MiRcs私有目录路径transPath;
+            note left: transPath是对传递下来的Path和cookie进行编码生成的路径 \r\n 对transPath进行解码可以重新获取入参的Path  \r\n 根据FD和transPath复制文件 ;
+            :将文件从Messaging拷贝到transPath路径下;
+            note left:参数中携带messaging进程uri可通过此Uri获取文件FD \r\n \r\n 使用线程池拷贝 ;
+         else(是)
+	    endif
+	else(非沙盒)
+	:将文件拷贝到SDcard;
+	endif
+	:调用rcsUploadHttpFile上传文件;
+	note right: 原接口 \r\n 入参为Cookie path等
+	end group
+
+  :调用MiRcs接口进行上传文件;
+	if(调用上传接口是否成功) then (yes)
+	        :等待MiRcs上传结果回调;
+    	    if(上传成功)then(yes)
+					:回调中获取transPath等信息;
+					:消息入库存储文件路径为transPath;
+                    :上报Messaging发送成功广播通知;
+                    group Messaging
+                    :Messaging根据transPath拿到FD展示文件;
+                    endgroup
+    	    else(no)
+    	    :构造失败广播通知Messaging;
+    	    endif
+    else(no)
+    	:构造失败广播通知Messaging;
+    endif
+stop
+@end

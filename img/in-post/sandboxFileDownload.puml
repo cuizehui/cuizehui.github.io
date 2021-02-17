@@ -21,7 +21,7 @@ start
 if(下载是否成功) then (yes)
 if(是否开启沙盒) then (开启)
     :将下载路径转化为Uri,进程1可通过此Uri获取文件FD;
-    :将PathB转换为Path;
+    :将transPath转换为Path;
     :上报给进程1下载成功事件;
 	note right:广播上报
 	group 进程1
