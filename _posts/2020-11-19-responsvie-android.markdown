@@ -143,7 +143,7 @@ public class RmsProvider extends ContentProvider {
 
 ### 进程2通过fd获取文件
 
-```Java
+```java
      FileDescriptor fileDescriptor = RcsMmsInitHelper.getContext().getContentResolver().openFileDescriptor(uri, "r").getFileDescriptor();
           
           
