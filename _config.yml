@@ -71,7 +71,7 @@ ga_domain: huangxuan.me
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "被命运反复捉摸的你啊<br>收藏了多少动人的情话"
+sidebar-about-description: "切断电缆<br>朝霞风晚"
 sidebar-avatar: /img/nela.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
