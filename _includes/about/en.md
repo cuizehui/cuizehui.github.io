@@ -115,17 +115,6 @@
 在此项目中学习了手机系统软件的开发流程。掌握modem编译方式。提高了文档阅读能力。对项目进度和管理沟通，有了深刻的认识。
 
 
-### 相关技术文章
-
-
-- [MMS短信源码-重要功能分析](https://cuizehui.github.io/2019/03/22/responsive-android/)
-
-- [进程间通信-Binder实战:https://cuizehui.github.io/2018/07/07/responsive-android/](https://cuizehui.github.io/2018/07/07/responsive-android/) 
-
-- [sdk接口自动化测试:https://cuizehui.github.io/2018/09/25/responsive-android/](https://cuizehui.github.io/2018/09/25/responsive-android/)
-
-- [H5-webViewApp开发总结:https://cuizehui.github.io/2018/05/01/responsive-android/](https://cuizehui.github.io/2018/05/01/responsive-android/)
-
 # 致谢
 感谢您花时间阅读我的简历，期待能有机会和您共事。
 

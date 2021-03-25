@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "MVP模式Adapter分离失败案例-总结"
+title:      "MVP模式Adapter处理总结"
 subtitle:   "通过两种案例对比Adapter 在MVP模式下的处理方法，并分析此案例失败的原因"
 date:       2018-12-03 22:56:00
 author:     "Nela"
