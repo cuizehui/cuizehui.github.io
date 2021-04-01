@@ -1,8 +1,7 @@
 ---
 layout:     post
-title:      "Android-ActivityManagerService
-"
-subtitle:   "AMS详解"
+title:      "Activity"
+subtitle:   "AMS的启动流程和Activity的启动流程"
 date:       2021-03-11 11:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
@@ -18,13 +17,10 @@ tags:
 本文基于Android-R源码 从以下方面介绍AMS
 1. AMS的启动流程
 2. AMS启动Activity的流程
-3. AMS启动 Service& BroadCast
-
 
 ## AMS启动流程
 
 在经过C层init启动后,SystemServer会开始启动一些引导服务,启动包括ActivityManagerService 。 其中调用了ActivityManagerService的setSystemProcess()方法 如下两段代码
-
 
 SystemServer # main 
 
@@ -408,7 +404,9 @@ ActivityThread  管理着一个应用进程的主线程,用来调度和执行运
 
 ### AMS启动Activity的流程简述
     
-    Activity的启动过程，我们可以从Context的startActivity说起，其实现是ContextImpl的startActivity，然后内部会通过Instrumentation来尝试启动Activity，这是一个跨进程过程，它会调用ams的startActivity方法，当ams校验完activity的合法性后，会通过ApplicationThread回调到我们的进程，这也是一次跨进程过程，
+    Activity的启动过程，我们可以从Context的startActivity说起，其实现是ContextImpl的startActivity，然后内部会通过Instrumentation来尝试启动Activity，
+    
+    这是一个跨进程过程，它会调用ams的startActivity方法，当ams校验完activity的合法性后，会通过ApplicationThread回调到我们的进程，这也是一次跨进程过程，
     
     而applicationThread就是一个binder，回调逻辑是在binder线程池中完成的，所以需要通过Handler H将其切换到ui线程，
     
@@ -1075,7 +1073,7 @@ ActivityStack #  resumeTopActivityInnerLocked
                     lastFocusedStack == null ? null : lastFocusedStack.mResumedActivity;
             final ActivityState lastState = next.getState();
 
-            mAtmService.updateCpuStats();
+            mAtmSeattachrvice.updateCpuStats();
 
             if (DEBUG_STATES) Slog.v(TAG_STATES, "Moving to RESUMED: " + next
                     + " (in existing)");
@@ -1528,6 +1526,8 @@ mInstrumentation # newActivity
 由此可看出，Activity是通过类加载器去创建的实例。
 mInstrumentation # callActivityOnCreate
 
+activity.attach时会创建Window,绘制view等视图
+
 Activity # performCreate
 
 ```java
@@ -1559,11 +1559,94 @@ Activity # performCreate
 ```
 
 
-## Broadcast和Service为例，分析AMS中Broadcast和Service的相关处理流程。
+
+## 问题
+
+### AMS把栈分成几部分
 
 
+### AMS 对方进程是什么时候创建出来的？ 主线程是什么时候跑起来的
 
+- AMS先判断是否有相应的 ProcessRecord
+- AMS通过Socket去和Zygote协商 ZygoteFock APP进程
+- 由于Zygote进程在启动时会创建Java虚拟机，因此通过fork而创建的Launcher程序进程可以在内部获取一个Java虚拟机的实例拷贝 
+- 把进程信息通过Socket发给fork进程
+- 最终进入ActivityThread的main方法。   
 
+### Activity View是如何绘制的
+
+```java
+
+    @UnsupportedAppUsage
+    final void attach(Context context, ActivityThread aThread,
+            Instrumentation instr, IBinder token, int ident,
+            Application application, Intent intent, ActivityInfo info,
+            CharSequence title, Activity parent, String id,
+            NonConfigurationInstances lastNonConfigurationInstances,
+            Configuration config, String referrer, IVoiceInteractor voiceInteractor,
+            Window window, ActivityConfigCallback activityConfigCallback, IBinder assistToken) {
+        attachBaseContext(context);
+
+        mFragments.attachHost(null /*parent*/);
+
+        mWindow = new PhoneWindow(this, window, activityConfigCallback);
+        mWindow.setWindowControllerCallback(mWindowControllerCallback);
+        mWindow.setCallback(this);
+        mWindow.setOnWindowDismissedCallback(this);
+        mWindow.getLayoutInflater().setPrivateFactory(this);
+        if (info.softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED) {
+            mWindow.setSoftInputMode(info.softInputMode);
+        }
+        if (info.uiOptions != 0) {
+            mWindow.setUiOptions(info.uiOptions);
+        }
+        mUiThread = Thread.currentThread();
+
+        mMainThread = aThread;
+        mInstrumentation = instr;
+        mToken = token;
+        mAssistToken = assistToken;
+        mIdent = ident;
+        mApplication = application;
+        mIntent = intent;
+        mReferrer = referrer;
+        mComponent = intent.getComponent();
+        mActivityInfo = info;
+        mTitle = title;
+        mParent = parent;
+        mEmbeddedID = id;
+        mLastNonConfigurationInstances = lastNonConfigurationInstances;
+        if (voiceInteractor != null) {
+            if (lastNonConfigurationInstances != null) {
+                mVoiceInteractor = lastNonConfigurationInstances.voiceInteractor;
+            } else {
+                mVoiceInteractor = new VoiceInteractor(voiceInteractor, this, this,
+                        Looper.myLooper());
+            }
+        }
+
+        mWindow.setWindowManager(
+                (WindowManager)context.getSystemService(Context.WINDOW_SERVICE),
+                mToken, mComponent.flattenToString(),
+                (info.flags & ActivityInfo.FLAG_HARDWARE_ACCELERATED) != 0);
+        if (mParent != null) {
+            mWindow.setContainer(mParent.getWindow());
+        }
+        mWindowManager = mWindow.getWindowManager();
+        mCurrentConfig = config;
+
+        mWindow.setColorMode(info.colorMode);
+        mWindow.setPreferMinimalPostProcessing(
+                (info.flags & ActivityInfo.FLAG_PREFER_MINIMAL_POST_PROCESSING) != 0);
+
+        setAutofillOptions(application.getAutofillOptions());
+        setContentCaptureOptions(application.getContentCaptureOptions());
+    }
+```
+
+创建了WindowManager 并绑定了WMS
+
+## 参考
 
 https://cloud.tencent.com/developer/article/1466430 
 

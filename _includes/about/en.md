@@ -8,17 +8,16 @@
 
 - 崔泽辉 男 1994                             工作年限：**5年**
 - **本科/华东交通大学**                        物联网工程系 
-- 期望职位：                                  Android高级工程师
+- 期望职位：                                  Android工程师
 - 个人博客： [https://cuizehui.github.io/](https://cuizehui.github.io/) 
 
 ## 个人简介
 
-    - FrameWork层开发1年
-    - IM-SDK研发经验3年
-    - IM应用研发1年
+    - IM-SDK(RCS)研发经验3年
+    - IM应用开发1年
     - 担任项目负责人,有管理2人小团队经验
     - 熟悉 MMS & Messaging & TelephoneProvider的AOSP源码
-    - 善于定位并解决SDK发生的各种问题,对接中兴/小米/海信/联想/TCL/柔宇等手机厂商和三大运营商
+    - 善于定位并解决SDK发生的问题,对接中兴/小米/海信/联想/TCL/柔宇等手机厂商和三大运营商
     - 有良好的代码规范,文档规范,能够熟练使用MarkDown
 
 ## 工作经历
@@ -26,7 +25,6 @@
 ### **宁波菊风系统软件有限公司**（ 2018年4月 ~ 至今 ）
 
 #### 融合通信5G消息研发 （2019年1月-至今）
-
 
 - 项目描述
     
@@ -38,21 +36,20 @@
     1. 组织并协助初级开发工程师完成5G消息demo功能开发。优化RCS-SDK功能。code Review相关代码。
     2. 封装协议栈SO库接口,设计RCS-SDK模块,定义模块接口
     3. 完善RCS-SDK日志,并根据日志分析厂商和运营商的各种业务问题。
-    4. 根据Android系统日志，解决、定位、调试，SDK的集成问题。分析ANR和Crash等常见问题
+    4. 根据Android系统日志，解决、定位、调试，SDK的集成问题。分析Crash,ANR等常见问题
     5. 完成demo中 文件传输，卡片消息展示，Maap商户,消息（地理位置，图片语音）收发功能等界面UI
-
 
 - 涉及的技术点
 
-   |技术点| 实现方式|
+   |技术点| 实现方式
    |-----|--------------------------------------------------------------------|
-   |进程通信    | **Jni+AIDL+Service+ContentProvider+broadCast**实现服务进程，采用**多种跨进程通信**方式，给上层短信提供业务能力接口|
+   |进程通信    | **AIDL+Service+ContentProvider+broadCast**实现服务进程，采用**多种跨进程通信**方式，给上层短信提供业务能力接口|
    |数据存储    |  使用**SharedPreference、SQLiteDatabase**数据库存储操作（数据库升级）等操作、流文件存储、等方式实现数据持久化|
-   |组件化    | 按照业务划分模块，将不同功能组件化，例如鉴权登陆模块、文件传输、群聊消息模块，一对一消息收发模块|
-   |设计模式   | Mms短信代码结构**mvc**模式,Messaging短信代码结构为**Mvp**模式 |
-   |定时操作    |JobScheduler +IntentService 实现定时登陆操作 、埋点功能实现，数据上传 |
-   |Android适配|AndroidR沙盒模式文件适配,API适配,AOSP短信源码版本升级方案|
+   |异步操作方式|熟练掌握 Handler+Thread、AsyncTask、线程池|
+   |设计模式   | 单例模式,mvp,代理模式,建造者模式 |
+   |定时操作    | IntentService 实现定时登陆操作 、埋点功能实现，数据上传 |
    |Gradle操作 | SO加载JNI配置，gradle操作jar包，**flavor**多分支多渠道打包方式，aar打包|
+   |组件化    | 按照业务划分模块，将不同功能组件化，例如鉴权登陆模块、文件传输、群聊消息模块，一对一消息收发模块|
 
 - 对接的厂商项目
 
@@ -61,31 +58,26 @@
     |2019.08-至今|**海信、魅族、小米、中兴**移动互联融合通信项目|提供5G消息SDK和demo,提供厂商SDK集成升级方案,配合运营商将5G消息业务升级，完成5G消息新标准|
     |2019.01-2019.08|**Oppo-外销**Rcs|基于Oppo系统短信源码（MMS），加入RCS-SDK,修改TelephoneProvider，通过GMSA认证|
     
-
-#### Juphoon音视频Sdk开发 （2018年4月-2019年1月）
-
-
+#### Juphoon音视频SDK封装 （2018年4月-2019年1月）
 
 - 项目描述
     
-    1. 研发具有一对一/多方音视频通话功能,一对一群组Im功能,文件存储的功能的SDK和Demo
+    1. 集成SDK并开发具有一对一/多方音视频通话功能,一对一群组Im功能,文件存储的功能的SDK和Demo
     2. 使用SDK进行各种项目的开发
        
 - 掌握技能
     
     1. 掌握git,gerrit,Jenkins 代码管理工具
-    2.  掌握gradle, shell,adb 命令,Python掌握,等协助开发技能
+    2.  掌握gradle, shell,adb 命令,等协助开发技能
     3. 掌握开源框架的使用和问题的定位
         
 - 涉及的技术点
   
   |技术点| 实现方式|
   |-----|--------------------------------------------------------------------|
-  |异步操作方式|Handler+Thread、AsyncTask|
-  |开源框架| AgentWeb、Butterknife、Glade、SmartRefresh、EventBus框架、Retrofit2、Realm|
-  |界面 | ViewPager+fragment、自定义View、RecyclerView、Activity|
-  |自动化测试| python+动态代理+反射+Socket+json |
- 
+  |开源框架| 掌握EventBus框架,了解使用Butterknife、Glide、Realm等框架|
+  |界面 | 了解使用 ViewPager+Fragment、自定义View、RecyclerView、Activity|
+  |自动化测试| 动态代理+反射+Socket+json |
  
 - 使用JC-SDK开发项目
     
@@ -104,18 +96,17 @@
 完成Android framework层的客制化需求，修改手机系统测试出现的各种类型BUG。累计解决客户需求和系统Bug 150+。
 
 - 熟悉android_FrameWork层开发，有Debug能力，对代码追踪和问题定位有经验。
-- 对短信，SystemUI模块较为熟悉
+- 对短信模块较为熟悉
 - 有MTK平台的开发经验
-
 
 #### Safircom项目 
 
-在此项目中负责MMI层的开发工作，完成客户的客制化和需求的移植。修改Modem项，预置APK，修改并通过GTS/CTS认证，修改Framwork层出现的BUG。
+在此项目中负责MMI层的开发工作，完成客户的客制化和需求的移植。预置APK，修改并通过GTS/CTS认证，修改Framwork层出现的BUG。
 
 在此项目中学习了手机系统软件的开发流程。掌握modem编译方式。提高了文档阅读能力。对项目进度和管理沟通，有了深刻的认识。
 
-
 # 致谢
+
 感谢您花时间阅读我的简历，期待能有机会和您共事。
 
 
