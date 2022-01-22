@@ -10,7 +10,6 @@ tags:
 
 ## SharedPreferences源码分析
 
-
 ### SharedPreferences 加载流程
 
 ```java
@@ -48,12 +47,14 @@ tags:
 ```
 
 先去内存中查询与xml对应的SharePreferences是否已经被创建加载，如果没有那么该创建就创建，
+
 该加载就加载，在加载之后，要将所有的key-value保存到内存才能中去，
+
 当然，如果首次访问，可能连xml文件都不存在，那么还需要创建xml文件，
+
 与SharePreferences对应的xml文件位置一般都在/data/data/包名/shared_prefs目录下，后缀一定是.xml
 
 ```java
-
     @UnsupportedAppUsage
     SharedPreferencesImpl(File file, int mode) {
         mFile = file;
@@ -80,6 +81,7 @@ tags:
         }.start();
     }
 ```
+
 startLoadFromDisk很简单，就是读取xml配置，如果其他线程想要在读取之前就是用的话，就会被阻塞，一直wait等待，直到数据读取完成。
 
 ```java
@@ -391,3 +393,7 @@ MODE_MULTI_PROCESS，不好用。
 - SharePreferences的commit与apply一个是同步一个是异步（大部分场景下），sp的commit方法是直接在当前线程执行文件写入操作,而apply方法是在工作线程执行文件写入,尽可能使用apply,因为不会阻塞当前线程
 
 - sharePrefence 怎么加载的？是xml加载到内存中的,并采取线程加锁,如果未加载完成调用则处于等待状态。
+
+### 后续
+
+- MMKV技术
