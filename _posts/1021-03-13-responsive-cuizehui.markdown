@@ -1011,9 +1011,7 @@ https://blog.csdn.net/weixin_30682043/article/details/113051854
        2. MessageQueue # enqueueMessage 按执行时间先后顺序加入到消息队列
        3. Thread 调用 Looper # loop从MessageQueue # next 取出Message
        3. Looper 调用 Message.target.dispatchMessage(msg);
-       4. Hanlder.handleMessage 回到Handler所在线程
-                
-        将系统时间增加延迟假如到MessageQue队列
+       4. Hanlder.handleMessage 回到Handler所在线程 ,将系统时间增加延迟假如到MessageQue队列
 
     - 一个线程有几个Looper，looper什么时候开始循环？
     
@@ -1057,6 +1055,8 @@ https://blog.csdn.net/weixin_30682043/article/details/113051854
      
     - IO多路复用
         - 本质是监听文件变化 投递message改变文件唤醒。         
+
+- handler屏障消息
 
 ### handlerThread
 
