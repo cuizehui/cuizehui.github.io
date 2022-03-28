@@ -70,10 +70,10 @@ tags:
 
 针对单IP请求Google ,有以下方案可以实行
 
-1.ip轮询:动态替换vpn代理地址
-2.ua随机:动态替换UserAgent
-3.domain随机:动态替换Google域名
-4.休眠:延迟请求
+1. ip轮询:动态替换vpn代理地址
+2. ua随机:动态替换UserAgent
+3. domain随机:动态替换Google域名
+4. 休眠:延迟请求
 
 此处参考文章 并使用其开源代码[MagicGoogle](https://www.howie6879.cn/p/对于python抓取google搜索结果的一些了解/)
 
@@ -263,6 +263,11 @@ html示例截取部分
                 shop_info.icon = icon_link
         return True
 ```
+
+### 携带cookie爬取需要登录的网站
+
+    todo
+
 ### 使用异步框架ruia的使用介绍
 
     todo
