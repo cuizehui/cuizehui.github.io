@@ -1268,55 +1268,28 @@ API 30
 
 # 进程间通信
 
-## Binder & AIDL 进程间通信
+## AIDL封装了什么
 
-- binder
-    
-    - binder的内存映射是如何实现的？
-    
-    用户空间的一块内存区域映射到内核空间。是基于C/S架构的，即service端产生Binder服务。通过serviceManager注册至系统内核. client端通过serviceManager获取Binder服务（实际是代理对象）完成通信
-    1. Binder驱动在内核空间创建一块数据接受缓冲区物理(1M - 8K) binder的物理页由binder驱动负责分配
-    2. 在内核空间开辟一块内核缓冲区虚拟,将数据接受缓冲区和内核缓冲区做映射。 数据接受缓冲区和接受进程用户空间虚拟做映射
-    3. 发送方将数据复制到内核中由于存在映射，也就相当于把数据复制到接收方用户空间。
-    
-    https://xiaozhuanlan.com/topic/7903248561
-    
-    - binder客户端和Binder服务端的通信流程
-   
-      1. 代理对象调用通过data reply 数据包调用transcat方法.
-      2. 客户端调用的transcat()函数会被挂起(同步调用会后线程会挂起，异步调用不会挂起)，直到对应的onTransact()函数在服务端执行完成 
-      3. 由binder驱动到binder服务端     未必正确:找方法是根据方法IDcode,（所以jar包增加AIDL接口都放在最下面兼容老版本）
-      4. Binder线程池最多有16个线程，也就是每个进程可以并发的处理16个远程调用。应用程序实现的onTransact()和其他处理远程调用的函数必须是线程安全的
-      5. AIDL返回代理对象判断是否是同进程还是跨进程是在asInterface接口中
-      
-    - 代码细节
-    
-        1.服务端创建binder 实现onTransact 方法。
-        2.客户端通过ServiceManager（反射获取 ）获得binder 调用transact方法
-        3.客户端创建Binder 继承  Binder 实现 IInterface 实现onTransact方法,此时可将binder通过ServiceManager注册至系统内核但无权限
-        4.可通过data_writeStrongBinder，将本地binder注册传递给服务binder完成双向通信
-        5.检测远端binder挂调 通过IBinder.DeathRecipient
-   
-    - 还有那些其他IPC方式？Binder相比与其他IPC有什么优势？
-    
-       管道（两次拷贝） 共享内存（不安全）socket  Binder(内存映射)
-       1.  管道（两次拷贝)sokect 安全性依赖上层协议
-       2. 用户空间和用户空间无法直接数据传输,可通过内核空间中转。 即用户空间A->内核空间->用户空间B 
-       3. 共享内存,死锁等问题 安全性依赖上层协议 
-       4. Binder(内存映射)校验id
-       
-## AIDL 
+1.其中的stub类封装了远端ontransact的调用过程,stub子类proxy封装了客户端拿到远端binder进行transact的调用过程
+
+- Stub类的asInterface做了什么？
+
+1.asInterface(android.os.IBinder obj) 用于将服务端的Binder对象转换成客户端所需的AIDL接口类型的对象，这种转换过程是区分进程的，如果客户端和服务端位于同一进程，那么此方法返回的 就是服务端的Stub对象本身，否则返回的是系统封装后的Stub.proxy对象。
+
+- Stub类的onTransact做了什么？
+
+Stub就是一个Binder类，服务端会实现此类中的接口,当发成方法调用需要走onTransact过程，后调用服务端实现的接口。
 
 - AIDL三个参数有理解过吗/传递自定义类型参数的修饰符in，out，inout的区别？
-    
+
     1. AIDL支持传输八种基本数据类型和实现Parcelabel的引用类型
-    2. 如果你对自定义类型使用了in或者inout标识符的话;你必须再给自定义类实现readFromParcel()
-    3. 传递自定义对象一定要设置定向TAG，in out inout 进行修饰
- 
-    in 为定向 tag 的话表现为服务端将会接收到一个那个对象的完整数据，但是客户端的那个对象不会因为服务端对传参的修改而发生变动；
-    out 的话表现为服务端将会接收到那个对象的的空对象，但是在服务端对接收到的空对象有任何修改之后客户端将会同步变动；
-    inout 为定向 tag 的情况下，服务端将会接收到客户端传来对象的完整信息，并且客户端将会同步服务端对该对象的任何变动。
-    主要是通过,data_ reply_ 实现操作 序列化的两个回调函数实现的
+    2. 对于非基本数据类型(传递自定义对象一定要设置定向TAG)，也不是String和CharSequence类型的，需要有方向指示，包括in、out和inout，in表示由客户端设置，out表示由服务端设置，inout是两者均可设置
+    3. 如果你对自定义类型使用了in或者inout标识符的话;你必须再给自定义类实现readFromParcel()
+
+  in 为定向 tag 的话表现为服务端将会接收到一个那个对象的完整数据，但是客户端的那个对象不会因为服务端对传参的修改而发生变动；
+  out 的话表现为服务端将会接收到那个对象的的空对象，但是在服务端对接收到的空对象有任何修改之后客户端将会同步变动；
+  inout 为定向 tag 的情况下，服务端将会接收到客户端传来对象的完整信息，并且客户端将会同步服务端对该对象的任何变动。
+  主要是通过,data_ reply_ 实现操作 序列化的两个回调函数实现的
 
 ```java 
 
@@ -1352,20 +1325,18 @@ API 30
 https://www.jianshu.com/p/0eda666085a1
 
 - 如何指定AIDL为异步调用？
-   放到非 UI 线程
-              
+  放到非 UI 线程
+
 - 默认情况下AIDL的调用过程是同步还是异步？
-     默认情况下AIDL调用过程是同步的，例如A进程请求与B进程通信，A会等到B海枯石烂的，如果A为主线程调用的话，那么B如果执行时间过程很可能就直接ANR了，
-     并且注意B那边是很多进程都可以调用的，所以要注意同步数据，并且B那边被调用执行的时候都是在子线程（binder线程）
-     ，如果有**回调**的话，那么也是在子线程，所有A在获取B那边的**回调数据后**如果要更新ui要注意不能在子线程更新ui
+  默认情况下AIDL调用过程是同步的，例如A进程请求与B进程通信，A会等到B海枯石烂的，如果A为主线程调用的话，那么B如果执行时间过程很可能就直接ANR了，
+  并且注意B那边是很多进程都可以调用的，所以要注意同步数据，并且B那边被调用执行的时候都是在子线程（binder线程）
+  ，如果有**回调**的话，那么也是在子线程，所有A在获取B那边的**回调数据后**如果要更新ui要注意不能在子线程更新ui
 
 - AIDL 优点和缺点
-    
+
     1. 是通信的约定,严格意义的约定的接口
     2. 容易出现连接断开
-
-
-
+    
 ### AIDL异步接口的使用
 
 1. 接口方法名增加oneWay,无返回值
@@ -1386,6 +1357,43 @@ https://www.jianshu.com/p/0eda666085a1
 ```
 
 对于客户端是异步的，但是对于服务端还是同步执行。
+
+## Binder 
+
+- binder
+    
+    - binder的内存映射是如何实现的？
+    
+    用户空间的一块内存区域映射到内核空间。是基于C/S架构的，即service端产生Binder服务。通过serviceManager注册至系统内核. client端通过serviceManager获取Binder服务（实际是代理对象）完成通信
+    1. Binder驱动在内核空间创建一块数据接受缓冲区物理(1M - 8K) binder的物理页由binder驱动负责分配
+    2. 在内核空间开辟一块内核缓冲区虚拟,将数据接受缓冲区和内核缓冲区做映射。 数据接受缓冲区和接受进程用户空间虚拟做映射
+    3. 发送方将数据复制到内核中由于存在映射，也就相当于把数据复制到接收方用户空间。
+    
+    https://xiaozhuanlan.com/topic/7903248561
+    
+    - binder客户端和Binder服务端的通信流程
+   
+      1. 客户端通过data reply 数据包调用transcat方法.
+      2. 客户端调用的transcat()函数会被挂起(同步调用会后线程会挂起，异步调用不会挂起)，直到对应的onTransact()函数在服务端执行完成 
+      3. 由binder驱动到binder服务端     未必正确:找方法是根据方法IDcode,（所以jar包增加AIDL接口都放在最下面兼容老版本）
+      4. 服务端调用实现的onTransact()和其他处理远程调用的函数必须是线程安全的
+      5. Binder线程池最多有16个线程，也就是每个进程可以并发的处理16个远程调用
+      
+    - 代码细节
+    
+        1. 服务端创建binder 实现onTransact 方法。
+        2. 客户端通过ServiceManager（反射获取 ）获得binder 调用transact方法 
+        3. 如果实现双向通讯，客户端创建新的Binder,可通过data_writeStrongBinder，将本地binder注册传递给服务binder完成双向通信 
+        4. 检测远端binder挂调 通过IBinder.DeathRecipient
+   
+    - 还有那些其他IPC方式？Binder相比与其他IPC有什么优势？
+    
+       管道（两次拷贝） 共享内存（不安全）socket  Binder(内存映射)
+       1.  管道（两次拷贝)sokect 安全性依赖上层协议
+       2. 用户空间和用户空间无法直接数据传输,可通过内核空间中转。 即用户空间A->内核空间->用户空间B 
+       3. 共享内存,死锁等问题 安全性依赖上层协议 
+       4. Binder(内存映射)校验id
+   
                
 ## 如何跨进程传递大数据
 

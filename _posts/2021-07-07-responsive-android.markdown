@@ -2,7 +2,7 @@
 layout:     post
 title:      "Android进程间通信-Binder实战"
 subtitle:   "记录通过binder通信+小米push使natave具有push能力的完整过程"
-date:       2018-07-07 21:58:00
+date:       2021-07-07 21:58:00
 author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
@@ -13,11 +13,26 @@ tags:
 
 ## 简介
 
-本文记录了一次由JAVA层和C层通过Binder完整且稳定通信的方法。
+本文介绍不采用AIDL模版,基于binder的进程间通信方式。
 
 首先介绍了Binder通信的基本原理，然后通过需求切入，提供了两种通信方案（即java层注册service和c层注册service）然后根据实际情况，实现方案。并记录了实现过程中出现的问题和解决思路。
 
-## 基本概念
+## AIDL做了什么?
+
+封装了Stub类和子类proxy
+
+1.其中的stub类封装了binder远端ontransact的调用过程,stub子类proxy封装了客户端拿到远端binder进行transact的调用过程（比如transact参数组装等）
+
+- Stub类的asInterface做了什么？
+
+1.asInterface(android.os.IBinder obj) 用于将服务端的Binder对象转换成客户端所需的AIDL接口类型的对象，这种转换过程是区分进程的，如果客户端和服务端位于同一进程，那么此方法返回的 就是服务端的Stub对象本身，否则返回的是系统封装后的Stub.proxy对象。
+
+- Stub类的onTransact做了什么？
+
+Stub就是一个Binder类，服务端会实现此类中的接口,当发生RPC调用时,会走onTransact过程，然后调用服务端实现的接口。
+
+
+## Binder基本概念
 
 Binder通讯数据复制一次的最本质原因：
 
@@ -32,7 +47,7 @@ sercice注册服务-通过binder对象连接-servicemager和用户空间
 并做内存映射。以达到让用户空间访问servcie服务的方法。
  
 **小结:**
-理清思路，即service端产生Binder服务。通过serviceManager注册至系统内核. client端通过serviceManager获取Binder服务（实际是代理对象）完成通信。
+理清思路，即service端产生Binder服务重写ontransact。通过serviceManager注册至系统内核. client端通过serviceManager获取Binder服务,调用Transact完成通信。
 
 ## 需求
 
@@ -51,14 +66,15 @@ linux进程服务想要获得推送功能。但c层无法实现。实现思路�
 
 由于不知道如上两个问题如何解决。不知道是否是单向通信，那么我们确保通信的稳定。则要按照如下步骤进行实现。
 
-1. c层实现service,java层实现client
-2. java实现service,c层实现client
+- 方案一 c层实现service,java层实现client
+
+- 方案二  java实现service,c层实现client
 
 ## 具体实现
 
-### c层实现service
+### 方案一
 
-**第一步.** 生成Binder服务：
+**第一步.** 服务端生成Binder：
 
 ```c
 android::status_t CJuBinder::onTransact( uint32_t code, const android::Parcel& data, android::Parcel* reply, uint32_t flags)
@@ -109,12 +125,11 @@ int CJuBinder::RegisterService()
 ***特别注意***上述代码均是由c层同事编写。可能粘贴有不准确或遗漏的部分。可参考此网站：
 [https://blog.csdn.net/ganyue803/article/details/41315733](网上事例代码)
 
-### Java实现client
 
-**第一步.**获取Ibinder对象
+**第三步.**客户端获取Ibinder对象
 
 ***问题：***
-首先通过ide发现，android并没有serviceManager这个类。那么我们通过反射获取serviceManager对象并调用getService方法获取IBinder.
+android并没有serviceManager这个类。那么我们通过反射获取serviceManager对象并调用getService方法获取IBinder.
 
 
 ```java
@@ -126,20 +141,12 @@ int CJuBinder::RegisterService()
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        .... 省略部分代码
         return null;
     }
 ```
 
-**第二步.**调用方法
+**第四步.**调用方法
 
 
 ```java
@@ -174,7 +181,7 @@ public boolean sendTokenAndPackageName(Context context, String token) {
 
 ```
 
-**代码讲解：** 
+**代码讲解：**
 调用c层提供给我们的方法，code为int型，我们定义方法为1。
 这里我们参数传递了string类型字符串，由于要传递的string很多，那么我们通过定义json数据格式传递。
 
@@ -187,6 +194,8 @@ public boolean sendTokenAndPackageName(Context context, String token) {
 调试结果,c层可以拿到参数并调用相应方法。至此c注册服务-android获取并调用的流程就已经简单打通。
 
 但是为了解决最开始的两个问题，那么java层也要注册服务，c层获取并调用。
+
+### 方案二
 
 ### JAVA层实现service 
 
@@ -237,10 +246,7 @@ public interface IPushInterface extends IInterface{
 
 **代码讲解：** binder对象主要是重写***onTransact*** 方法。IInterface 接口重写 ***asBinder()***。这两个方法是最重要的。也是android中AIDL实现的基本原理。在AIDL自动构建好的文件中上述这个LocalBinder被叫做stub.
 
-***延伸***：aidl是在这个基础上做了有一层封装，aidl中还有一个queryLocalInterface和attachInterface。
-
 attachInterface也是接口标示，而queryLocalInterface则和我们后面说到的传递Ibinder对象有关，会判断是否是本地binder.
-
 
 **第二步.** 注册Binder
 
@@ -349,9 +355,6 @@ AIDL 为什么能注册 ？
 因为它底层通过service-》activityServiceManager注册至系统内核
 activityServiceManager是系统内核控制的。
 
-### 后续完善
-
-判断网络&重连机制
 
 ### 代码地址
 [https://github.com/cuizehui/PushAPK-Binder]()
@@ -365,3 +368,5 @@ https://www.cnblogs.com/hpboy/archive/2012/07/12/2587797.html
 https://www.cnblogs.com/zhangxinyan/p/3487866.html
 
 https://blog.csdn.net/ganyue803/article/details/41315733
+
+https://toutiao.io/posts/wlalk9/preview
