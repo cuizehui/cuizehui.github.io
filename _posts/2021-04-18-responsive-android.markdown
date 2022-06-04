@@ -13,8 +13,12 @@ tags:
 ### 复用实现
 
 - RecyclerView怎么加载数据的？
-    1. RecyclerView复用机制
-    2. RecyclerView三级缓存
+1. RecyclerView复用机制
+
+  
+
+
+2. RecyclerView三级缓存
 
 
 ```
@@ -184,6 +188,7 @@ mRecyclerPool：这个也很重要，但存在这里的 ViewHolder 的数据信�
 
 分为4种动画。
 
+### 触摸时间分发，解决滑动冲突
 
 ### 卡顿优化
 

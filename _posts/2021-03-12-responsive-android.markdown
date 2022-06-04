@@ -1039,3 +1039,25 @@ public abstract class IntentService extends Service {
     public static final int START_REDELIVER_INTENT = 3; //重传Intent。使用这个返回值时，如果在执行完onStartCommand后，服务被异常kill掉，系统会自动重启该服务，并将Intent的值传入
 
 ```
+
+START_REDELIVER_INTENT
+
+Constant to return from onStartCommand(Intent, int, int): if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)), then it will be scheduled for a restart and the last delivered Intent re-delivered to it again via onStartCommand(Intent, int, int).
+
+START_STICKY
+
+Constant to return from onStartCommand(Intent, int, int): if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)), then leave it in the started state but don't retain this delivered intent.
+
+START_NOT_STICKY
+
+Constant to return from onStartCommand(Intent, int, int): if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)), and there are no new start intents to deliver to it, then take the service out of the started state and don't recreate until a future explicit call to Context.startService(Intent).
+
+
+### onStartCommand什么时候调用
+
+重启原理也是binder的死亡代理机制
+
+1.oncreate后每次会start会调用 
+当service被kill时 下一次重新自启动，会调用此函数根据返回值和flag调用此函数重建service 选择执行intent和忽略intent
+
+https://blog.csdn.net/runningampH/article/details/120133507

@@ -120,3 +120,9 @@ public class DataContentProvider extends ContentProvider {
 }
 ```
 
+
+## cursorLoader 分页
+
+1，cursor一次性加载所有数据不会延迟吗？
+
+

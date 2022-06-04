@@ -567,13 +567,20 @@ ReentrantLock里面有一个内部类Sync，Sync继承AQS（AbstractQueuedSynchr
     
 - 线程池的几个核心参数，超过线程池个数了如何处理？
 
-    - AbortPolicy  线程池队列满了丢掉这个任务并且抛出RejectedExecutionException异常。 如果是比较关键的业务，推荐使用此拒绝策略，这样子在系统不能承载更大的并发量的时候，能够及时的通过异常发现。
-    - DiscardPolicy 如果线程池队列满了丢掉这个任务并且抛出RejectedExecutionException异常。  建议是一些无关紧要的业务采用此策略。
+    - AbortPolicy 线程池队列满了丢掉这个任务并且抛出RejectedExecutionException异常。 如果是比较关键的业务，推荐使用此拒绝策略，这样子在系统不能承载更大的并发量的时候，能够及时的通过异常发现。
+    - DiscardPolicy 如果线程池队列满了丢掉这个任务并且抛出RejectedExecutionException异常。 建议是一些无关紧要的业务采用此策略。
     - DiscardOldestPolicy 如果队列满了，会将最早进入队列的任务删掉腾出空间，再尝试加入队列。 是否要采用此种拒绝策略，还得根据实际业务是否允许丢弃老任务来认真衡量。
     - CallerRunsPolicy 如果添加到线程池失败，由调用线程处理该任务
-   
-自定义拒绝策略 
- 
+- 线程池的几种队列
+
+    - ArrayBlockingQueue（int i）:规定大小的BlockingQueue，其构造必须指定大小。其所含的对象是FIFO顺序排序的。
+    - LinkedBlockingQueue（）或者（int i）:
+      大小不固定的BlockingQueue，若其构造时指定大小，生成的BlockingQueue有大小限制，不指定大小，其大小有Integer.MAX_VALUE来决定。其所含的对象是FIFO顺序排序的。
+    - PriorityBlockingQueue（）或者（int i）:类似于LinkedBlockingQueue，但是其所含对象的排序不是FIFO，而是依据对象的自然顺序或者构造函数的Comparator决定。
+    - SynchronizedQueue（）:特殊的BlockingQueue，对其的操作必须是放和取交替完成。不做存储
+
+自定义拒绝策略
+
 ```
 public class MyRejectPolicy implements RejectedExecutionHandler{
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -588,6 +595,8 @@ public class MyRejectPolicy implements RejectedExecutionHandler{
 ```    
 
 https://zhuanlan.zhihu.com/p/112527671
+
+https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html
 
 ## ConcurrentHashMap为什么线程安全
 
@@ -743,7 +752,63 @@ ASYNC（交给线程池来管理）：直接通过asyncPoster调度。
 
 ## Glide
 
-### LRUCache原理？ 
+### 整体设计
+
+1.请求模块和生命周期绑定用于取消和开始请求等活跃资源生命周期
+2.RequestBuilder用于设置各种请求失败的默认图,参数设置等
+3.缓存调度，和缓存策略
+
+
+### gilde.with(activity)  fragment Context 区别?
+
+生命周期不同,活跃态资源,转为内存缓存的时机
+
+context一直是application的时机
+
+### 活跃资源
+
+active resources are those that have been provided to at least one request and have not yet been released. Once all consumers of a resource have released that resource, the resource then goes to cache. If the resource is ever returned to a new consumer from cache, it is re-added to the active resources. If the resource is evicted from the cache, its resources are recycled and re-used if possible and the resource is discarded. There is no strict requirement thatconsumers release their resources so active resources are held weakly.
+
+活动资源是已提供给至少一个请求但尚未释放的资源。 一旦资源的所有消费者都释放了该资源，该资源就会进入缓存。 
+如果资源曾经从缓存中返回给新的消费者，它会被重新添加到活动资源中。 如果从缓存中逐出资源，则尽可能回收并重新使用其资源，并丢弃该资源。
+没有严格要求消费者释放他们的资源，所以活跃的资源被弱持有。
+
+引用计数的方式
+
+
+```java
+public class Engine
+    implements EngineJobListener,
+        MemoryCache.ResourceRemovedListener,
+        EngineResource.ResourceListener {
+    @Nullable
+      private EngineResource<?> loadFromMemory(
+          EngineKey key, boolean isMemoryCacheable, long startTime) {
+        if (!isMemoryCacheable) {
+          return null;
+        }
+    
+        EngineResource<?> active = loadFromActiveResources(key);
+        if (active != null) {
+          if (VERBOSE_IS_LOGGABLE) {
+            logWithTimeAndKey("Loaded resource from active resources", startTime, key);
+          }
+          return active;
+        }
+    
+        EngineResource<?> cached = loadFromCache(key);
+        if (cached != null) {
+          if (VERBOSE_IS_LOGGABLE) {
+            logWithTimeAndKey("Loaded resource from cache", startTime, key);
+          }
+          return cached;
+        }
+    }
+```
+
+- 活动资源缓存（ 和内存缓存互斥） weakHashMap，在内存就不再活跃中
+
+### 内存缓存
 
 LinkedHashMap ：
 
@@ -752,6 +817,34 @@ hashMap+ 双向链表 实现时间复杂度为O1
 2. 双线链表解决数据后移到尾节点问题
 3. 满了删调头节点
 4. 使用数组计数可以实现无法达到O1
+
+https://juejin.cn/post/6994669144490639368
+
+### 磁盘缓存DiskLRUCache原理 
+
+### 使用
+DiskLruCache的创建、缓存查找和缓存添加这三个方面来
+
+DiskLruCache的的创创建建
+
+DiskLruCache的的缓缓存存添添加加
+
+
+DiskCacheStrategy.DATA: 只缓存原始图片；
+DiskCacheStrategy.RESOURCE:只缓存转换过后的图片；
+DiskCacheStrategy.ALL:既缓存原始图片，也缓存转换过后的图片；对于远程图片，缓存 DATA和 RESOURCE；对于本地图片，只缓存 RESOURCE；
+DiskCacheStrategy.NONE：不缓存任何内容；
+DiskCacheStrategy.AUTOMATIC：默认策略，尝试对本地和远程图片使用最佳的策略。
+当下载网络图片时，使用DATA(原因很简单，对本地图片的处理可比网络要容易得多)；
+对于本地图片，使用RESOURCE。
+
+AUTOMATIC ，它会尝试对本地和远程图片使用最佳的策略。当你加载远程数据（比如，从URL下载）时，AUTOMATIC 策略仅会存储未被你的加载过程修改过(比如，变换，裁剪–译者注)的原始数据，
+因为下载远程数据相比调整磁盘上已经存在的数据要昂贵得多。对于本地数据，AUTOMATIC 策略则会仅存储变换过的缩略图，因为即使你需要再次生成另一个尺寸或类型的图片，取回原始数据也很容易
+
+
+### 缓存的刷新
+
+混入签名，或者改变uri
 
 
 ### LiveData
@@ -1365,7 +1458,7 @@ https://www.jianshu.com/p/0eda666085a1
     - binder的内存映射是如何实现的？
     
     用户空间的一块内存区域映射到内核空间。是基于C/S架构的，即service端产生Binder服务。通过serviceManager注册至系统内核. client端通过serviceManager获取Binder服务（实际是代理对象）完成通信
-    1. Binder驱动在内核空间创建一块数据接受缓冲区物理(1M - 8K) binder的物理页由binder驱动负责分配
+    1. Binder驱动在内核空间创建一块数据接受缓冲区物理(1M - 8K) binder的物理页由binder驱动负责分配（mmap方法申请的内存）
     2. 在内核空间开辟一块内核缓冲区虚拟,将数据接受缓冲区和内核缓冲区做映射。 数据接受缓冲区和接受进程用户空间虚拟做映射
     3. 发送方将数据复制到内核中由于存在映射，也就相当于把数据复制到接收方用户空间。
     
@@ -1389,11 +1482,38 @@ https://www.jianshu.com/p/0eda666085a1
     - 还有那些其他IPC方式？Binder相比与其他IPC有什么优势？
     
        管道（两次拷贝） 共享内存（不安全）socket  Binder(内存映射)
-       1.  管道（两次拷贝)sokect 安全性依赖上层协议
+       1. 管道（两次拷贝)sokect 安全性依赖上层协议
        2. 用户空间和用户空间无法直接数据传输,可通过内核空间中转。 即用户空间A->内核空间->用户空间B 
        3. 共享内存,死锁等问题 安全性依赖上层协议 
        4. Binder(内存映射)校验id
-   
+    - MB-8KB的限制来源于哪里？如何突破限制？
+        
+        apk层申请的binder控件都是由ProcessState这个类如果自己申请可以申请4M
+        
+        ```
+        #define BINDER_VM_SIZE ((1 * 1024 * 1024) - sysconf(_SC_PAGE_SIZE) * 2)//这里的限制是1MB-4KB*2
+        
+        ProcessState::ProcessState(const char *driver)
+        {
+        if (mDriverFD >= 0) {
+        // mmap the binder, providing a chunk of virtual address space to receive transactions.
+        // 调用mmap接口向Binder驱动中申请内核空间的内存
+        mVMStart = mmap(0, BINDER_VM_SIZE, PROT_READ, MAP_PRIVATE | MAP_NORESERVE, mDriverFD, 0);
+        if (mVMStart == MAP_FAILED) {
+        // *sigh*
+        ALOGE("Using %s failed: unable to mmap transaction memory.\n", mDriverName.c_str());
+        close(mDriverFD);
+        mDriverFD = -1;
+        mDriverName.clear();
+        }
+        }
+        }
+        ```
+    
+- 一次拷贝是在哪里进行拷贝的
+  
+        
+    
                
 ## 如何跨进程传递大数据
 
@@ -1536,4 +1656,26 @@ public class LockTest2 {
 
 ### Binder数据传输通信效率,优化问题。
 
+### broadcast 
 
+安全性问题
+
+```xml
+  <permission
+        android:name="com.android.messaging.blackmessage.permission.WRITE"
+        android:protectionLevel="signatureOrSystem" />
+    <permission
+        android:name="com.android.messaging.blackmessage.permission.READ"
+        android:protectionLevel="signatureOrSystem" />
+```
+signature：它要求权限声明应用和权限使用应用使用相同的keystore进行签名。如果使用同一keystore，则该权限由系统授予，否则系统会拒绝。并且权限授予时，不会通知用户。它常用于应用内部。把protectionLevel声明为signature。如果别的应用使用的不是同一个签名文件，就没办法使用该权限，从而保护了自己的接收者。
+
+### export属性默认值
+
+如果有filter默认是true
+
+没有默认是false
+
+### 异步方法转同步方法的策略
+
+SDK提供了异步方法,想把此方法调用变成同步
