@@ -7,7 +7,6 @@ author:     "Nela"
 header-img: "img/post-bg-rwd.jpg"
 tags:
 - AndroidSDK-Test 
-- Python
 ---
 
 ## 前言

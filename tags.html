@@ -26,7 +26,9 @@ header-img: "img/tag-bg.jpg"
             <!-- 标签云 -->
 			<div id='tag_cloud' class="tags">
 				{% for tag in site.tags %}
+				{% if tag[0] != site.hide-tags %}
 				<a href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}</a>
+				{% endif %}
 				{% endfor %}
 			</div>
 
@@ -38,6 +40,7 @@ header-img: "img/tag-bg.jpg"
 
             <!-- 标签列表 -->
 			{% for tag in site.tags %}
+			{% if tag[0] != "Nela" %}
 			<div class="one-tag-list">
 			  	<span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
                     <span class="tag-text">{{ tag[0] }}</span>
@@ -63,6 +66,7 @@ header-img: "img/tag-bg.jpg"
 				<hr>
 				{% endfor %}
 			</div>
+			{% endif %}
 			{% endfor %}
 
 		</div>
